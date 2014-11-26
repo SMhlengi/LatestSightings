@@ -1,0 +1,5 @@
+C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsLibrary\bin\Debug\LatestSightingsLibrary.dll
+C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsLibrary\bin\Debug\LatestSightingsLibrary.pdb
+C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.dll
+C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.pdb
+C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.csprojResolveAssemblyReference.cache
