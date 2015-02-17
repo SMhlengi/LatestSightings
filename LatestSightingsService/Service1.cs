@@ -98,7 +98,9 @@ namespace LatestSightingsService
         {
             YouTubeVideos ytVideos = new YouTubeVideos();
 
-            if (DateTime.Now.Day < 17)
+            ytVideos.UpdateVideoDetails();
+
+            if (DateTime.Now.Day < 16)
             {
                 ytVideos = new YouTubeVideos();
                 ytVideos.UpdateVideoAnalytics(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month);
@@ -114,7 +116,7 @@ namespace LatestSightingsService
             types.Add(LatestSightingsLibrary.Stat.Top10Types.Views);
 
             Month mnth = new Month();
-            if (DateTime.Now.Day < 17)
+            if (DateTime.Now.Day < 16)
             {
                 mnth = new Month();
                 mnth.UpdateMonthAnalytics(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month);
@@ -148,6 +150,10 @@ namespace LatestSightingsService
                     {
                         statsObj.GetTopTen(DateTime.Now.Year, DateTime.Now.Month, (LatestSightingsLibrary.Stat.Top10Types)Enum.Parse(typeof(LatestSightingsLibrary.Stat.Top10Types), types[i].ToString()));
                     }
+                }
+                else
+                {
+                    statsObj.GetTopTen(DateTime.Now.Year, DateTime.Now.Month, (LatestSightingsLibrary.Stat.Top10Types)Enum.Parse(typeof(LatestSightingsLibrary.Stat.Top10Types), types[i].ToString()));
                 }
             }
 

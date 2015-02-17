@@ -31,6 +31,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_STATS_WITHDAY = "SELECT * FROM latestsightings.dbo.stats WHERE (Year = @year AND Month = @month AND day = @day AND type = @type) ORDER BY Ordering";
         private const string SQL_GET_STATS_BYVIDEO = "SELECT a.*, b.Title FROM latestsightings.dbo.stats a INNER JOIN latestsightings.dbo.videos b ON b.youTubeId = a.videoId WHERE (a.Year = @year AND a.Month = @month AND a.type = @type) ORDER BY a.Ordering";
         private const string SQL_GET_STATS_WITHDAY_BYVIDEO = "SELECT a.*, b.Title FROM latestsightings.dbo.stats a INNER JOIN latestsightings.dbo.videos b ON b.youTubeId = a.videoId WHERE (a.Year = @year AND a.Month = @month AND a.day = @day AND a.type = @type) ORDER BY a.Ordering";
+        private const string SQL_GET_VIEWS_BYCONTRIBUTOR = "SELECT TOP 10 c.Id, c.firstname, c.lastname, SUM (a.Views) AS TotalViews FROM [latestsightings].[dbo].[videosAnalytics] a INNER JOIN [latestsightings].[dbo].[videos] b ON b.youtubeId = a.videoId INNER JOIN [latestsightings].[dbo].[people] c ON c.id = b.contributor WHERE (a.year = @year AND a.month = @month AND a.views > 0) GROUP BY c.Id, c.firstname, c.lastname ORDER BY TotalViews DESC";
 
         public static void SaveStats(List<Stat> stats)
         {
@@ -226,6 +227,57 @@ namespace LatestSightingsLibrary
                         stat.VideoTitle = rdr["title"].ToString();
 
                         stats.Add(stat);
+                    }
+                }
+                rdr.Close();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                ExHandler.RecordError(ex);
+            }
+
+            return stats;
+        }
+
+        public static List<Stat> GetContributorViews(int year, int month, int quantity)
+        {
+            List<Stat> stats = null;
+
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.Connection = conn;
+                sqlQuery.CommandText = SQL_GET_VIEWS_BYCONTRIBUTOR;
+                sqlQuery.Parameters.Add("year", System.Data.SqlDbType.Int).Value = year;
+                sqlQuery.Parameters.Add("month", System.Data.SqlDbType.Int).Value = month;
+                SqlDataReader rdr = sqlQuery.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    stats = new List<Stat>();
+                    int count = 1;
+                    while (rdr.Read())
+                    {
+                        Stat stat = new Stat();
+
+                        stat.Day = 0;
+                        stat.Month = month;
+                        stat.Year = year;
+                        stat.Ordering = count;
+                        stat.Position = count;
+                        stat.Stat1 = rdr["Id"].ToString();
+                        stat.Stat2 = rdr["firstname"].ToString();
+                        stat.Stat3 = rdr["lastname"].ToString();
+                        stat.Stat4 = rdr["TotalViews"].ToString();
+                        stat.Stat5 = "";
+                        stat.Type = Top10Types.Views;
+                        stat.VideoId = "";
+                        stat.VideoTitle = "";
+
+                        stats.Add(stat);
+                        count++;
                     }
                 }
                 rdr.Close();

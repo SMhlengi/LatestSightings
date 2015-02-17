@@ -33,6 +33,7 @@ namespace LatestSightingsLibrary
         private const string SQL_UPDATE_VIDEO = "UPDATE latestsightings.dbo.videos SET title = @title, alias = @alias, dateRecieved = @dateRecieved, ipDate = @ipDate, ipDocument = @ipDocument, revenueShare = @revenueShare, keywords = @keywords, region = @region, notes = @notes, modified = @modified, status = @status, youtubeId = @youtubeId, dateUploaded = @dateUploaded, dateRemoved = @dateRemoved WHERE (id = @id);";
         private const string SQL_GET_VIDEOS_COMPACT = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor ORDER BY a.Title";
         private const string SQL_GET_VIDEOS_COMPACT_BYPENDING = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor WHERE (status = 'Pending') ORDER BY a.Title";
+        private const string SQL_GET_VIDEOS_COMPACT_BYPUBLISHED = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor WHERE (status = 'Published') ORDER BY a.Title";
         private const string SQL_GET_VIDEOS_COMPACT_BYNOTPENDING = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor WHERE (status <> 'Pending') ORDER BY a.Title";
         private const string SQL_GET_VIDEOS_BYCONTRIBUTOR = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor WHERE (contributor = @contributor) ORDER BY a.Title";
         private const string SQL_INSERT_ANALYTICS = "INSERT INTO latestsightings.dbo.videosAnalytics (videoId, year, month, views, youtubeEarningEstimate, youtubeEarnings, youtubeLastRun) VALUES (@videoId, @year, @month, @views, @youtubeEarningEstimate, @youtubeEarnings, @youtubeLastRun);";
@@ -40,7 +41,7 @@ namespace LatestSightingsLibrary
         private const string SQL_CHECK_ANALYTICS_BYID = "SELECT COUNT(*) FROM latestsightings.dbo.videosAnalytics WHERE (videoId = @videoId AND Month = @month AND Year = @year);";
         private const string SQL_GET_ANALYTICS = "SELECT * FROM latestsightings.dbo.videosAnalytics WHERE (videoId = @videoId AND year = @year AND month = @month);";
         private const string SQL_GET_ANALYTICS_ALL = "SELECT * FROM latestsightings.dbo.videosAnalytics WHERE (year = @year AND month = @month);";
-        private const string SQL_GET_ANALYTICS__ALL_BY_CONTRIBUTOR = "SELECT a.* FROM latestsightings.dbo.videosAnalytics a INNER JOIN latestsightings.dbo.videos b ON b.YoutubeId = a.VideoId WHERE (a.year = @year AND a.month = @month AND a.contributor = @contributor);";
+        private const string SQL_GET_ANALYTICS__ALL_BY_CONTRIBUTOR = "SELECT a.* FROM latestsightings.dbo.videosAnalytics a INNER JOIN latestsightings.dbo.videos b ON b.YoutubeId = a.VideoId WHERE (a.year = @year AND a.month = @month AND b.contributor = @contributor);";
         private const string SQL_GET_ANALYTICS_BY_Id = "SELECT * FROM latestsightings.dbo.videosAnalytics WHERE (videoId = @videoId);";
         private const string SQL_GET_ANALYTICS_BY_CONTRIBUTOR = "  SELECT a.year, a.month, SUM(a.youtubeEarnings) AS Total FROM [latestsightings].[dbo].[videosAnalytics] a INNER JOIN [latestsightings].[dbo].[videos] b ON b.youtubeId = a.videoId WHERE (b.contributor = @contributor) GROUP BY a.year, a.month;";
 
@@ -239,6 +240,10 @@ namespace LatestSightingsLibrary
                 SqlCommand sqlQuery = new SqlCommand();
                 sqlQuery.Connection = conn;
                 sqlQuery.CommandText = status == "Pending" ? SQL_GET_VIDEOS_COMPACT_BYPENDING : SQL_GET_VIDEOS_COMPACT_BYNOTPENDING;
+                if (status == "Published")
+                {
+                    sqlQuery.CommandText = SQL_GET_VIDEOS_COMPACT_BYPUBLISHED;
+                }
                 sqlQuery.Parameters.Add("status", System.Data.SqlDbType.VarChar).Value = status;
                 SqlDataReader rdr = sqlQuery.ExecuteReader();
                 if (rdr.HasRows)
@@ -544,7 +549,7 @@ namespace LatestSightingsLibrary
                 conn.Open();
                 SqlCommand sqlQuery = new SqlCommand();
                 sqlQuery.Connection = conn;
-                sqlQuery.CommandText = SQL_GET_ANALYTICS_ALL;
+                sqlQuery.CommandText = SQL_GET_ANALYTICS__ALL_BY_CONTRIBUTOR;
                 sqlQuery.Parameters.Add("year", System.Data.SqlDbType.VarChar).Value = year;
                 sqlQuery.Parameters.Add("month", System.Data.SqlDbType.VarChar).Value = month;
                 sqlQuery.Parameters.Add("contributor", System.Data.SqlDbType.VarChar).Value = contributorId;

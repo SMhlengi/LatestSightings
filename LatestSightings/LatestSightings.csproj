@@ -60,17 +60,103 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AjaxFunction.aspx" />
     <Content Include="ajax\.DS_Store" />
+    <Content Include="Articles.aspx" />
+    <Content Include="article\addCategory.ascx" />
+    <Content Include="article\addnewarticle.ascx" />
+    <Content Include="article\articlesBoard.ascx" />
+    <Content Include="article\editArticle.ascx" />
+    <Content Include="article\uc_norecords.ascx" />
+    <Content Include="assets\tinymce\license.txt" />
+    <Content Include="assets\tinymce\plugins\advlist\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\anchor\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\autolink\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\autoresize\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\autosave\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\bbcode\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\charmap\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\code\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\colorpicker\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\contextmenu\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\directionality\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-cool.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-cry.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-embarassed.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-foot-in-mouth.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-frown.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-innocent.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-kiss.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-laughing.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-money-mouth.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-sealed.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-smile.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-surprised.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-tongue-out.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-undecided.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-wink.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\img\smiley-yell.gif" />
+    <Content Include="assets\tinymce\plugins\emoticons\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\example\dialog.html" />
+    <Content Include="assets\tinymce\plugins\example\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\example_dependency\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\fullpage\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\fullscreen\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\hr\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\image\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\importcss\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\insertdatetime\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\layer\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\legacyoutput\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\link\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\lists\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\media\moxieplayer.swf" />
+    <Content Include="assets\tinymce\plugins\media\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\nonbreaking\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\noneditable\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\pagebreak\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\paste\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\preview\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\print\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\save\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\searchreplace\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\spellchecker\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\tabfocus\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\table\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\template\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\textcolor\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\textpattern\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="assets\tinymce\plugins\visualblocks\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\visualchars\plugin.min.js" />
+    <Content Include="assets\tinymce\plugins\wordcount\plugin.min.js" />
+    <Content Include="assets\tinymce\skins\lightgray\content.inline.min.css" />
+    <Content Include="assets\tinymce\skins\lightgray\content.min.css" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce-small.dev.svg" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce-small.svg" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce.dev.svg" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce.svg" />
+    <Content Include="assets\tinymce\skins\lightgray\img\anchor.gif" />
+    <Content Include="assets\tinymce\skins\lightgray\img\loader.gif" />
+    <Content Include="assets\tinymce\skins\lightgray\img\object.gif" />
+    <Content Include="assets\tinymce\skins\lightgray\img\trans.gif" />
+    <Content Include="assets\tinymce\skins\lightgray\skin.ie7.min.css" />
+    <Content Include="assets\tinymce\skins\lightgray\skin.min.css" />
+    <Content Include="assets\tinymce\themes\modern\theme.min.js" />
+    <Content Include="assets\tinymce\tinymce.min.js" />
     <Content Include="ContributorHistory.aspx" />
     <Content Include="Contributors.aspx" />
     <Content Include="ContributorsData.aspx" />
     <Content Include="css\.DS_Store" />
     <Content Include="css\dataTables.bootstrap.css" />
     <Content Include="css\dataTables.responsive.css" />
+    <Content Include="css\article.css" />
     <Content Include="css\tooltipster.css" />
     <Content Include="Default.aspx" />
     <Content Include="Details.txt" />
     <Content Include="email_publish.html" />
+    <Content Include="FeaturedArticles.aspx" />
+    <Content Include="FeaturedCategories.aspx" />
     <Content Include="Financials.aspx" />
     <Content Include="FinancialsData.aspx" />
     <Content Include="fonts\.DS_Store" />
@@ -85,6 +171,7 @@
     <Content Include="fonts\weathericons-regular-webfont.ttf" />
     <Content Include="fonts\weathericons-regular-webfont.woff" />
     <Content Include="fonts\WeatherIcons-Regular.otf" />
+    <Content Include="GalleryData.aspx" />
     <Content Include="Graphs.aspx" />
     <Content Include="images\.DS_Store" />
     <Content Include="images\colorpicker\.DS_Store" />
@@ -116,10 +203,21 @@
     <Content Include="js\codemirror\.DS_Store" />
     <Content Include="js\dataTables.bootstrap.js" />
     <Content Include="js\dataTables.responsive.js" />
+    <Content Include="js\article.js" />
     <Content Include="js\flot\.DS_Store" />
     <Content Include="DefaultMaster.Master" />
+    <Content Include="js\VideoSorting.js" />
     <Content Include="packages.config" />
+    <Content Include="assets\tinymce\langs\readme.md" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\readme.md" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce-small.woff" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce.eot" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce.ttf" />
+    <Content Include="assets\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <None Include="Properties\PublishProfiles\Publish.pubxml" />
+    <Content Include="Test.aspx" />
     <Content Include="UserGraphs.aspx" />
     <Content Include="UserMaster.Master" />
     <None Include="Web.Debug.config">
@@ -652,11 +750,62 @@
     <Content Include="VideoItemData.aspx" />
     <Content Include="Videos.aspx" />
     <Content Include="VideosData.aspx" />
+    <Content Include="VideoSorting.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AjaxFunction.aspx.cs">
+      <DependentUpon>AjaxFunction.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AjaxFunction.aspx.designer.cs">
+      <DependentUpon>AjaxFunction.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Articles.aspx.cs">
+      <DependentUpon>Articles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Articles.aspx.designer.cs">
+      <DependentUpon>Articles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="article\addCategory.ascx.cs">
+      <DependentUpon>addCategory.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="article\addCategory.ascx.designer.cs">
+      <DependentUpon>addCategory.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="article\addnewarticle.ascx.cs">
+      <DependentUpon>addnewarticle.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="article\addnewarticle.ascx.designer.cs">
+      <DependentUpon>addnewarticle.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="article\articlesBoard.ascx.cs">
+      <DependentUpon>articlesBoard.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="article\articlesBoard.ascx.designer.cs">
+      <DependentUpon>articlesBoard.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="article\editArticle.ascx.cs">
+      <DependentUpon>editArticle.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="article\editArticle.ascx.designer.cs">
+      <DependentUpon>editArticle.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="article\uc_norecords.ascx.cs">
+      <DependentUpon>uc_norecords.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="article\uc_norecords.ascx.designer.cs">
+      <DependentUpon>uc_norecords.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="article\Utils.cs" />
     <Compile Include="ContributorHistory.aspx.cs">
       <DependentUpon>ContributorHistory.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -695,6 +844,20 @@
     </Compile>
     <Compile Include="ExHandler.cs" />
     <Compile Include="Export.cs" />
+    <Compile Include="FeaturedArticles.aspx.cs">
+      <DependentUpon>FeaturedArticles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FeaturedArticles.aspx.designer.cs">
+      <DependentUpon>FeaturedArticles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FeaturedCategories.aspx.cs">
+      <DependentUpon>FeaturedCategories.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FeaturedCategories.aspx.designer.cs">
+      <DependentUpon>FeaturedCategories.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Financials.aspx.cs">
       <DependentUpon>Financials.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -708,6 +871,13 @@
     </Compile>
     <Compile Include="FinancialsData.aspx.designer.cs">
       <DependentUpon>FinancialsData.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GalleryData.aspx.cs">
+      <DependentUpon>GalleryData.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GalleryData.aspx.designer.cs">
+      <DependentUpon>GalleryData.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -770,6 +940,13 @@
     <Compile Include="Contributor.aspx.designer.cs">
       <DependentUpon>Contributor.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Test.aspx.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Test.aspx.designer.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+    </Compile>
     <Compile Include="User.aspx.cs">
       <DependentUpon>User.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -827,8 +1004,16 @@
     <Compile Include="VideosData.aspx.designer.cs">
       <DependentUpon>VideosData.aspx</DependentUpon>
     </Compile>
+    <Compile Include="VideoSorting.aspx.cs">
+      <DependentUpon>VideoSorting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VideoSorting.aspx.designer.cs">
+      <DependentUpon>VideoSorting.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Code\" />
     <Folder Include="App_Data\" />
     <Folder Include="files\" />
     <Folder Include="Models\" />

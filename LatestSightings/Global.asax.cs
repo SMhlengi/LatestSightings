@@ -62,6 +62,7 @@ namespace LatestSightings
             routes.MapPageRoute("", "video", "~/video.aspx");
             routes.MapPageRoute("", "video/{id}", "~/video.aspx");
             routes.MapPageRoute("", "videos", "~/videos.aspx");
+            routes.MapPageRoute("", "videos/featured", "~/videosorting.aspx");
             routes.MapPageRoute("", "videos/{status}", "~/videos.aspx");
             routes.MapPageRoute("", "financials", "~/financials.aspx");
             routes.MapPageRoute("", "financials/{year}/{month}", "~/financials.aspx");
@@ -69,6 +70,42 @@ namespace LatestSightings
             routes.MapPageRoute("", "payments/{year}/{month}", "~/payments.aspx");
             routes.MapPageRoute("", "paymentscsv/{year}/{month}", "~/paymentsdatacsv.aspx");
             routes.MapPageRoute("", "user", "~/user.aspx");
+            routes.MapPageRoute("", "category/featured", "~/featuredcategories.aspx");
+            routes.MapPageRoute("", "articles/featured", "~/featuredarticles.aspx");
+
+            routes.MapPageRoute("", "articles", "~/articles.aspx");
+            routes.MapPageRoute("cms-add-new-article",
+                "articles/addnewarticle",
+                "~/articles.aspx", true,
+                 new RouteValueDictionary { 
+                { "view", "addnewarticle"}
+            });
+
+            routes.MapPageRoute("cms-view-articles-by-category",
+                "articles/category/{categoryid}",
+                "~/articles.aspx", true,
+                 new RouteValueDictionary { });
+
+            routes.MapPageRoute("cms-add-new-category",
+                "articles/addcategory",
+                "~/articles.aspx", true,
+                 new RouteValueDictionary { 
+                { "view", "addnewcategory"}
+            });
+
+            routes.MapPageRoute("cms-view-article-board",
+                "articles/articlesboard",
+                "~/articles.aspx", true,
+                 new RouteValueDictionary { });
+
+            routes.MapPageRoute("cms-edit-article",
+                "articles/edit/{articleid}",
+                "~/articles.aspx", true,
+                 new RouteValueDictionary { 
+                { "view", "editarticle"}
+            });
+
+            routes.Ignore("Language/assets/{*pathInfo}");
         }
     }
 }

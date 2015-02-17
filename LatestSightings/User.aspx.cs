@@ -21,7 +21,14 @@ namespace LatestSightings
         protected void Page_Load(object sender, EventArgs e)
         {
             Person peep = (Person)Session["user"];
-            person = Person.GetPerson(peep.Id);
+            if (Request.QueryString["testId"] != null)
+            {
+                person = Person.GetPerson(Request.QueryString["testId"]);
+            }
+            else
+            {
+                person = Person.GetPerson(peep.Id);
+            }
 
             if (person != null)
             {
@@ -43,16 +50,22 @@ namespace LatestSightings
 
             if (mnth != null)
             {
+                year = mnth.YearNumber;
+                month = mnth.MonthNumber;
+
                 List<YouTubeVideoAnalytics> anals = LatestSightingsLibrary.Video.GetYouTubeVideoAnalyticsByContributor(year, month, contributor);
                 decimal totalEarnings = 0;
                 long totalViews = 0;
 
-                foreach (YouTubeVideoAnalytics anal in anals)
+                if (anals != null)
                 {
-                    if (anal.EstimatedEarning > 0)
-                        totalEarnings += anal.EstimatedEarning;
-                    if (anal.Views > 0)
-                        totalViews += anal.Views;
+                    foreach (YouTubeVideoAnalytics anal in anals)
+                    {
+                        if (anal.EstimatedEarning > 0)
+                            totalEarnings += anal.EstimatedEarning;
+                        if (anal.Views > 0)
+                            totalViews += anal.Views;
+                    }
                 }
 
                 ltlEarnings.Text = "$" + totalEarnings.ToString();

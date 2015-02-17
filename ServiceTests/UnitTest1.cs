@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using LatestSightingsLibrary;
+using System.Collections.Generic;
 
 namespace ServiceTests
 {
@@ -83,6 +85,22 @@ namespace ServiceTests
         {
             LatestSightingsService.Stats stats = new LatestSightingsService.Stats();
             stats.GetTopTen(DateTime.Now.Year, DateTime.Now.Month, LatestSightingsLibrary.Stat.Top10Types.CountryViews);
+            Assert.AreEqual(0, 0);
+        }
+
+        [TestMethod]
+        public void TestTopContributorViews()
+        {
+            List<LatestSightingsLibrary.Stat> stats = LatestSightingsLibrary.Stat.GetContributorViews(2014, 10, 10);
+            Assert.AreEqual(stats.Count, 1);
+        }
+
+        [TestMethod]
+        public void TestGetVideoDetails()
+        {
+            LatestSightingsService.YouTubeVideos vids = new LatestSightingsService.YouTubeVideos();
+            YouTubeVideo vid = vids.GetVideoDetails("dnKn9bCO2HQ");
+            YouTubeVideo.SaveVideo(vid);
             Assert.AreEqual(0, 0);
         }
     }

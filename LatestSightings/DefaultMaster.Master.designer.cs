@@ -67,6 +67,33 @@ namespace LatestSightings {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl navfinancials;
         
         /// <summary>
+        /// navsitevideos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl navsitevideos;
+        
+        /// <summary>
+        /// navsitearticles control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl navsitearticles;
+        
+        /// <summary>
+        /// navsitecategories control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl navsitecategories;
+        
+        /// <summary>
         /// pageIcon control.
         /// </summary>
         /// <remarks>

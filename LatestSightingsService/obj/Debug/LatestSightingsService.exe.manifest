@@ -126,26 +126,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LatestSightingsLibrary.dll" size="94208">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LatestSightingsLibrary.dll" size="123392">
       <assemblyIdentity name="LatestSightingsLibrary" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>3esB7naGQRjnZ5TJI5oUy5hTG3U=</dsig:DigestValue>
+        <dsig:DigestValue>bwIXpmxDKdwwCaqKMtYPPbBrNCo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LatestSightingsService.exe" size="29184">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LatestSightingsService.exe" size="31744">
       <assemblyIdentity name="LatestSightingsService" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>4sbqNkQTBjzH9vcSAi5KZfw/LGA=</dsig:DigestValue>
+        <dsig:DigestValue>2zhGqdbh0kIGJwggplj7IeeIC2Y=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

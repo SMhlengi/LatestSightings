@@ -14,14 +14,15 @@ namespace LatestSightings
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            SetPageValues();
+
             var master = Master as DefaultMaster;
             if (master != null)
             {
-                master.SetHeader("Contributors", "user");
+                string method = String.IsNullOrEmpty(id) ? "Add" : "Edit";
+                master.SetHeader(method + " Contributor", "user");
                 master.SetActiveNav("contributors");
             }
-
-            SetPageValues();
 
             if (!Page.IsPostBack)
             {

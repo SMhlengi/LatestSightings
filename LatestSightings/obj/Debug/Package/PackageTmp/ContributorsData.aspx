@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ContributorsData.aspx.cs" Inherits="LatestSightings.ContributorsData" %>

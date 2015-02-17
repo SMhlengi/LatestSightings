@@ -45,6 +45,8 @@
     <Compile Include="data.cs" />
     <Compile Include="ExHandler.cs" />
     <Compile Include="Financial.cs" />
+    <Compile Include="Galleries.cs" />
+    <Compile Include="library.cs" />
     <Compile Include="Month.cs" />
     <Compile Include="Payment.cs" />
     <Compile Include="Person.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="ThirdPartyPayment.cs" />
     <Compile Include="ThirdPartyVideo.cs" />
     <Compile Include="Video.cs" />
+    <Compile Include="YouTubeVideo.cs" />
     <Compile Include="YouTubeVideoAnalytic.cs" />
     <Compile Include="YouTubeVideoAnalytics.cs" />
   </ItemGroup>

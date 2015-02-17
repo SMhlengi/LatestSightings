@@ -171,7 +171,7 @@ namespace LatestSightingsService
                 request.Dimensions = "month";
                 request.Filters = "claimedStatus==claimed";
                 ResultTable rTable = request.Execute();
-                if (rTable != null && rTable.Rows.Count > 0)
+                if (rTable != null && rTable.Rows != null && rTable.Rows.Count > 0)
                 {
                     string earnings = rTable.Rows[0][1].ToString();
                     string views = rTable.Rows[0][2].ToString();
@@ -216,7 +216,7 @@ namespace LatestSightingsService
                 request.Dimensions = "day";
                 request.Filters = "claimedStatus==claimed";
                 ResultTable rTable = request.Execute();
-                if (rTable != null && rTable.Rows.Count > 0)
+                if (rTable != null && rTable.Rows != null && rTable.Rows.Count > 0)
                 {
                     days = new List<LatestSightingsLibrary.YouTubeVideoAnalytic>();
 

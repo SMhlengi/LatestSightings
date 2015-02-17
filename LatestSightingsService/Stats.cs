@@ -104,6 +104,7 @@ namespace LatestSightingsService
             try
             {
                 DateTime analyticsMonth = new DateTime(year, month, 1, 0, 0, 0);
+                DateTime analyticsEndDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
                 UserCredential credential;
                 using (var stream = new FileStream(OAuthfile, FileMode.Open, FileAccess.Read))
                 {
@@ -119,7 +120,7 @@ namespace LatestSightingsService
                     ApplicationName = ProjectName,
                 });
 
-                Google.Apis.YouTubeAnalytics.v1.ReportsResource.QueryRequest request = service.Reports.Query("contentOwner==" + CustomerOwnerId, analyticsMonth.ToString("yyyy-MM-dd"), analyticsMonth.ToString("yyyy-MM-dd"), "views,estimatedMinutesWatched,earnings,monetizedPlaybacks,impressions");
+                Google.Apis.YouTubeAnalytics.v1.ReportsResource.QueryRequest request = service.Reports.Query("contentOwner==" + CustomerOwnerId, analyticsMonth.ToString("yyyy-MM-dd"), analyticsEndDate.ToString("yyyy-MM-dd"), "views,estimatedMinutesWatched,earnings,monetizedPlaybacks,impressions");
                 request.Dimensions = "video";
                 request.Filters = "uploaderType==self";
                 request.MaxResults = 10;
@@ -166,6 +167,7 @@ namespace LatestSightingsService
             try
             {
                 DateTime analyticsMonth = new DateTime(year, month, 1, 0, 0, 0);
+                DateTime analyticsEndDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
                 UserCredential credential;
                 using (var stream = new FileStream(OAuthfile, FileMode.Open, FileAccess.Read))
                 {
@@ -181,7 +183,7 @@ namespace LatestSightingsService
                     ApplicationName = ProjectName,
                 });
 
-                Google.Apis.YouTubeAnalytics.v1.ReportsResource.QueryRequest request = service.Reports.Query("contentOwner==" + CustomerOwnerId, analyticsMonth.ToString("yyyy-MM-dd"), analyticsMonth.ToString("yyyy-MM-dd"), "views,estimatedMinutesWatched,earnings,monetizedPlaybacks,impressions");
+                Google.Apis.YouTubeAnalytics.v1.ReportsResource.QueryRequest request = service.Reports.Query("contentOwner==" + CustomerOwnerId, analyticsMonth.ToString("yyyy-MM-dd"), analyticsEndDate.ToString("yyyy-MM-dd"), "views,estimatedMinutesWatched,earnings,monetizedPlaybacks,impressions");
                 request.Dimensions = "video";
                 request.Filters = "uploaderType==self";
                 request.MaxResults = 10;
@@ -228,6 +230,7 @@ namespace LatestSightingsService
             try
             {
                 DateTime analyticsMonth = new DateTime(year, month, 1, 0, 0, 0);
+                DateTime analyticsEndDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
                 UserCredential credential;
                 using (var stream = new FileStream(OAuthfile, FileMode.Open, FileAccess.Read))
                 {
@@ -243,7 +246,7 @@ namespace LatestSightingsService
                     ApplicationName = ProjectName,
                 });
 
-                Google.Apis.YouTubeAnalytics.v1.ReportsResource.QueryRequest request = service.Reports.Query("contentOwner==" + CustomerOwnerId, analyticsMonth.ToString("yyyy-MM-dd"), analyticsMonth.ToString("yyyy-MM-dd"), "views,estimatedMinutesWatched,earnings");
+                Google.Apis.YouTubeAnalytics.v1.ReportsResource.QueryRequest request = service.Reports.Query("contentOwner==" + CustomerOwnerId, analyticsMonth.ToString("yyyy-MM-dd"), analyticsEndDate.ToString("yyyy-MM-dd"), "views,estimatedMinutesWatched,earnings");
                 request.Dimensions = "country";
                 request.Filters = "uploaderType==self";
                 request.MaxResults = 10;

@@ -25,14 +25,15 @@ namespace LatestSightings
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            SetPageValues();
+
             var master = Master as DefaultMaster;
             if (master != null)
             {
-                master.SetHeader("Video", "video-camera");
+                string method = String.IsNullOrEmpty(id) ? "Add" : "Edit";
+                master.SetHeader(method + " Video", "video-camera");
                 master.SetActiveNav("videos");
             }
-
-            SetPageValues();
 
             if (!Page.IsPostBack)
             {
@@ -233,6 +234,7 @@ namespace LatestSightings
                 string emailTemplate = File.ReadAllText(MapPath("email_publish.html"));
 
                 MailMessage message = new MailMessage(ConfigurationManager.AppSettings["emailFromAddress"], cont.Email);
+                //MailMessage message = new MailMessage(ConfigurationManager.AppSettings["emailFromAddress"], "soulunavailable@gmail.com");
                 message.IsBodyHtml = true;
                 SmtpClient smtpClient = new SmtpClient();
                 smtpClient.Port = 25;
@@ -241,13 +243,16 @@ namespace LatestSightings
                 smtpClient.Host = ConfigurationManager.AppSettings["emailHost"];
                 NetworkCredential nc = new NetworkCredential(ConfigurationManager.AppSettings["emailUser"], ConfigurationManager.AppSettings["emailPassword"]);
                 smtpClient.Credentials = nc;
-                message.Subject = "LatestSightings Error";
+                message.Subject = "Your video has been published to our YouTube channel";
                 message.Body = String.Format(emailTemplate, cont.FirstName, vid.Title, ConfigurationManager.AppSettings["editDetailsPage"]);
                 smtpClient.Send(message);
+
+                UserInfo.AddAlert("Published email sent", GritterMessage.GritterMessageType.success);
             }
             catch (Exception ex)
             {
-
+                ExHandler.RecordError(ex);
+                UserInfo.AddAlert("Error sending email", GritterMessage.GritterMessageType.error);
             }
         }
 

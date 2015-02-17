@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -13,14 +14,16 @@ namespace LatestSightings
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            SetPageValues();
+
             var master = Master as DefaultMaster;
             if (master != null)
             {
-                master.SetHeader("Video", "video-camera");
+                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+
+                master.SetHeader(myTI.ToTitleCase(status) + " Videos", "video-camera");
                 master.SetActiveNav("videos");
             }
-
-            SetPageValues();
         }
 
         private void SetPageValues()
