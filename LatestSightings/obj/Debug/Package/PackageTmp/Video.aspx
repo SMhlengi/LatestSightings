@@ -52,7 +52,7 @@
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label class="control-label">Youtube ID</label>
-                        <asp:TextBox runat="server" ID="txtYoutubeId" Name="txtYoutubeId" CssClass="form-control with-label" />
+                        <asp:TextBox runat="server" ID="txtYoutubeId" Name="txtYoutubeId" CssClass="form-control with-label" ClientIDMode="Static" />
                     </div>
                     <div class="form-group col-md-4">
                         <div style="margin-bottom: 4px;"><label class="control-label">Status</label><span id="ttSI" class="glyphicon glyphicon-question-sign popovers" title="" data-original-title="Status"  style="margin-left: 5px;" data-container="body" data-toggle="popover" data-placement="top"></span></div>
@@ -90,6 +90,10 @@
                         </div>
                         <asp:HyperLink ID="ipLink" runat="server" Text="View IP Document" Visible="false" />
                     </div>
+                    <div class="form-group col-md-4" id="divContributor"  runat="server" visible="false">
+                        <label class="control-label">Change Contributor</label>
+                        <asp:TextBox runat="server" ID="txtContributor" Name="txtContributor" CssClass="form-control with-label" />
+                    </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-4">
@@ -115,9 +119,20 @@
                         <asp:TextBox runat="server" ID="txtNotes" name="txtAddress" TextMode="MultiLine" Rows="6" CssClass="form-control with-label" />
                     </div>
                 </div><!-- row -->
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <div class="ckbox ckbox-primary">
+                            <asp:Checkbox ID="chbxStream" runat="server" Checked="false" />
+                            <label for="<%= chbxStream.ClientID %>">Live Stream</label>
+                        </div>
+                    </div>
+                </div>
             </div>
              <div class="panel-footer">
-                <asp:Button  ID="btnSave" runat="server" OnClick="Save" CssClass="btn btn-success" Text="Submit" /> <button class="btn btn-danger" onclick="ResetForm();">Reset</button>
+                <asp:Button  ID="btnSave" runat="server" OnClick="Save" CssClass="btn btn-success" Text="Submit" /> <button class="btn btn-danger" onclick="ResetForm();">Reset</button> <button id="btnWatch" runat="server" visible="false" class="btn btn-primary youtube cancel">Watch Video</button>
+                <div style="float: right; width: 165px; height: 40px;" id="divRecalculate" runat="server" visible="false">
+                    <button class="confirm btn btn-primary" type="button">Recalculate Earnings</button>
+                </div>
             </div><!-- panel-footer -->
         </div>
     </div>
@@ -212,8 +227,11 @@
         var thirdPaties = <%= thirdPartiesCount %>;
     </script>
     <script src="/js/bootstrap-timepicker.min.js"></script>
+    <script src="/js/jquery.confirm.min.js"></script>
+    <script src="/js/bootstrap.youtubepopup.min.js"></script>
     <script src="/js/video.aspx.js"></script>
     <script>
+        var videoId = "<%= id %>";
         $("#<%= File1.ClientID %>").change(function () {
             var filenanme = this.value;
             if (filenanme.indexOf("\\") >= 0) {
@@ -247,4 +265,9 @@
             })
         })
     </script>
+<script type="text/javascript">
+    $(function () {
+        $(".youtube").YouTubeModal({autoplay:0, width:640, height:480, youtubeId: jQuery('#<%= txtYoutubeId.ClientID %>').val()});
+    });
+</script>
 </asp:Content>

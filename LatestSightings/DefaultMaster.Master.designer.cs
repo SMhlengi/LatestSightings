@@ -76,6 +76,15 @@ namespace LatestSightings {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl navsitevideos;
         
         /// <summary>
+        /// navsiteimages control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl navsiteimages;
+        
+        /// <summary>
         /// navsitearticles control.
         /// </summary>
         /// <remarks>

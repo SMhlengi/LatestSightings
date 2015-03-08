@@ -97,6 +97,7 @@
                                     <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">Add Payment</th>
                                     <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">History</th>
                                     <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">Contributor</th>
+                                    <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">Live Stream</th>
                                     <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">YouTube (R)</th>
                                     <asp:Literal ID="ltlHeader" runat="server" EnableViewState="false" />
                                 </tr>
@@ -222,6 +223,7 @@
                     { orderable: false, "render": function (data, type, full, meta) { return "<a href=\"javascript:void(0);\" onclick=\"ShowPayment('" + full.Id + "');\")\">Add Payment</a>" } },
                     { orderable: false, "render": function (data, type, full, meta) { return "<a href=\"javascript:void(0);\" onclick=\"VideoDetails('" + full.Id + "', '" + full.YouTubeId + "', '" + full.Title.replace(/'/g, "") + "');\")\">View</a>" } },
                     { "data": "Contributor", orderable: true },
+                    { "data": "LiveStream", orderable: true },
                     { "data": "YouTubeEarnings", orderable: true },
                     <% =currencyScripts%>
                 ]

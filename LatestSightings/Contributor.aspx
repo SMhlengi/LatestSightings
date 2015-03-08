@@ -66,6 +66,26 @@
                 </div><!-- row -->
                 <div class="row">
                     <div class="form-group col-md-4">
+                        <label class="control-label">Account Type</label>
+                        <asp:TextBox runat="server" ID="txtAccountType" name="txtAccountType" CssClass="form-control phonegroup with-label" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Account Number</label>
+                        <asp:TextBox runat="server" ID="txtAccountNo" name="txtAccountNo" CssClass="form-control phonegroup with-label" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Branch Name</label>
+                        <asp:TextBox runat="server" ID="txtBranchName" name="txtBranchName" CssClass="form-control phonegroup with-label" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Branch Code</label>
+                        <asp:TextBox runat="server" ID="txtBranchCode" name="txtBranchCode" CssClass="form-control phonegroup with-label" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
                         <label class="control-label">Password</label>
                         <asp:TextBox runat="server" ID="txtPassword" name="txtPassword" CssClass="form-control with-label" />
                     </div>

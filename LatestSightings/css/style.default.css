@@ -3797,3 +3797,19 @@ body.signin {
     top: 5px;
     left: 5px;
 }
+
+.toggle-success {
+    position: absolute; height: 20px; width: 50px; bottom: 4px; right: 2px;
+}
+.toggle-inner {
+    width: 80px; margin-left: 0px;
+}
+.toggle-on {
+    height: 20px; width: 40px; text-align: center; text-indent: -10px; line-height: 20px;
+}
+.toggle-blob {
+    height: 20px; width: 20px; margin-left: -10px;
+}
+.toggle-off {
+    height: 20px; width: 40px; margin-left: -10px; text-align: center; text-indent: 10px; line-height: 20px;
+}

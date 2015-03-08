@@ -89,6 +89,30 @@ namespace LatestSightingsService
             }
         }
 
+        public void RecalculateVideos()
+        {
+            List<LatestSightingsLibrary.Video> videos = LatestSightingsLibrary.Video.GetVideoToRecalculate();
+            if (videos != null)
+            {
+                foreach (LatestSightingsLibrary.Video video in videos)
+                {
+                    DateTime dateToCompare = new DateTime(DateTime.Now.AddMonths(1).Year, DateTime.Now.AddMonths(1).Month, 1, 0, 0, 0);
+                    DateTime startDate = new DateTime(video.DateUploaded.Year, video.DateUploaded.Month, 1, 0, 0, 0);
+                    while (startDate < dateToCompare)
+                    {
+                        YouTubeVideoAnalytics vidAnalytics = GetVideoAnalyticsForMonth(video.YoutubeId, startDate.Year, startDate.Month);
+                        if (vidAnalytics != null)
+                        {
+                            bool saved = LatestSightingsLibrary.Video.SaveYouTubeVideoAnalytics(vidAnalytics, startDate.Year, startDate.Month);
+                            LatestSightingsLibrary.Video.UpDateEarnings(video.Id, startDate.Year, startDate.Month);
+                        }
+                        startDate = startDate.AddMonths(1);
+                    }
+                    LatestSightingsLibrary.Video.SetRecalculate(video.Id, false);
+                }
+            }
+        }
+
         private List<YouTubeVideoAnalytics> GetVideoAnalytics(int year, int month)
         {
             List<LatestSightingsLibrary.Video> videos = GetPublishedVideos();
@@ -179,6 +203,62 @@ namespace LatestSightingsService
                     }
 
                     GetVideoAnalyticsByDay(id, year, month);
+                }
+                catch (Exception ex)
+                {
+                    ExHandler.RecordError(ex, "Error getting analytics");
+                    videoAnalytics = null;
+                }
+            }
+            else
+            {
+                videoAnalytics = null;
+            }
+
+            return videoAnalytics;
+        }
+
+        private YouTubeVideoAnalytics GetVideoAnalyticsForMonth(string id, int year, int month)
+        {
+            YouTubeVideoAnalytics videoAnalytics = LatestSightingsLibrary.Video.GetYouTubeVideoAnalytics(id, year, month);
+            bool run = true;
+
+            if (run && getVideoAnalyticsErrors < 3)
+            {
+                try
+                {
+                    DateTime analyticsMonth = new DateTime(year, month, 1, 0, 0, 0);
+                    UserCredential credential;
+                    using (var stream = new FileStream(OAuthfile, FileMode.Open, FileAccess.Read))
+                    {
+                        credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                            GoogleClientSecrets.Load(stream).Secrets,
+                            new[] { YouTubeAnalyticsService.Scope.YtAnalyticsMonetaryReadonly, YouTubeAnalyticsService.Scope.YtAnalyticsReadonly },
+                            "user", CancellationToken.None, new FileDataStore("Drive.Auth.Store")).Result;
+                    }
+
+                    var service = new YouTubeAnalyticsService(new BaseClientService.Initializer()
+                    {
+                        HttpClientInitializer = credential,
+                        ApplicationName = ProjectName,
+                    });
+
+                    Google.Apis.YouTubeAnalytics.v1.ReportsResource.QueryRequest request = service.Reports.Query("contentOwner==" + CustomerOwnerId, analyticsMonth.ToString("yyyy-MM-dd"), analyticsMonth.ToString("yyyy-MM-dd"), "earnings,views");
+                    request.Dimensions = "month";
+                    request.Filters = "video==" + id;
+                    ResultTable rTable = request.Execute();
+                    if (rTable != null && rTable.Rows != null && rTable.Rows.Count > 0)
+                    {
+                        string earnings = rTable.Rows[0][1].ToString();
+                        string views = rTable.Rows[0][2].ToString();
+
+                        if (videoAnalytics == null)
+                            videoAnalytics = new YouTubeVideoAnalytics();
+
+                        videoAnalytics.Id = id;
+                        videoAnalytics.EstimatedEarning = Convert.ToDecimal(earnings);
+                        videoAnalytics.Views = Convert.ToInt64(views);
+                    }
                 }
                 catch (Exception ex)
                 {

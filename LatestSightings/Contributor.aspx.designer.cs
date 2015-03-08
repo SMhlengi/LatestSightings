@@ -121,6 +121,42 @@ namespace LatestSightings {
         protected global::System.Web.UI.WebControls.TextBox txtPaypal;
         
         /// <summary>
+        /// txtAccountType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAccountType;
+        
+        /// <summary>
+        /// txtAccountNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAccountNo;
+        
+        /// <summary>
+        /// txtBranchName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBranchName;
+        
+        /// <summary>
+        /// txtBranchCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBranchCode;
+        
+        /// <summary>
         /// txtPassword control.
         /// </summary>
         /// <remarks>

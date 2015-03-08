@@ -79,6 +79,11 @@ namespace LatestSightings
                         AddThirdParty(thirdVid);
                     }
                 }
+                chbxStream.Checked = vid.IsLiveStream;
+
+                divContributor.Visible = true;
+                divRecalculate.Visible = true;
+                btnWatch.Visible = true;
             }
         }
 
@@ -170,6 +175,17 @@ namespace LatestSightings
                 vid.DateUploaded = (DateTime)System.Data.SqlTypes.SqlDateTime.MinValue;
                 isUpdate = false;
             }
+            else
+            {
+                if (!String.IsNullOrEmpty(txtContributor.Text))
+                {
+                    Person cntr = Person.GetPerson(txtContributor.Text);
+                    if (cntr != null)
+                    {
+                        vid.Contributor = cntr.Id;
+                    }
+                }
+            }
             vid.Alias = txtAlias.Text;
             vid.IPDate = String.IsNullOrEmpty(txtIpPicker.Text) ? (DateTime)System.Data.SqlTypes.SqlDateTime.MinValue : DateTime.Parse(txtIpPicker.Text);
             vid.IPDocument = GetIpDocument();
@@ -179,6 +195,7 @@ namespace LatestSightings
             vid.Region = txtRegion.Text;
             vid.RevenueShare = Request.Form[ddlRevenueShare.UniqueID];
             vid.Title = txtTitle.Text;
+            vid.IsLiveStream = chbxStream.Checked;
             if (vid.Status != ddlStatus.SelectedValue)
             {
                 videoStatus = ddlStatus.SelectedValue;
@@ -314,6 +331,12 @@ namespace LatestSightings
         {
             ThirdParty.AddThirdParty(name);
             return ThirdParty.GetThirdParties();
+        }
+
+        [WebMethod, ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = false)]
+        public static string Recalculate(string id)
+        {
+            return LatestSightingsLibrary.Video.SetRecalculate(id, true).ToString();
         }
     }
 }

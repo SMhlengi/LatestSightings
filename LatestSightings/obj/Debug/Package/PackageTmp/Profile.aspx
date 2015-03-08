@@ -35,7 +35,11 @@
                               
         <h5 class="md-title"><i class="fa fa-bank"></i> Bank Details</h5>
         <address>
-            <%= !String.IsNullOrEmpty(person.Banking) ? person.Banking.Replace(Environment.NewLine, "<br />") : "Not available" %>
+            <%= !String.IsNullOrEmpty(person.Banking) ? person.Banking.Replace(Environment.NewLine, "<br />") + "<br />" : "Not available" %>
+            <%= !String.IsNullOrEmpty(person.AccountType) ? person.AccountType.Replace(Environment.NewLine, "<br />") + "<br />" : "" %>
+            <%= !String.IsNullOrEmpty(person.AccountNumber) ? person.AccountNumber.Replace(Environment.NewLine, "<br />") + "<br />" : "" %>
+            <%= !String.IsNullOrEmpty(person.BranchName) ? person.BranchName.Replace(Environment.NewLine, "<br />") + "<br />" : "" %>
+            <%= !String.IsNullOrEmpty(person.BranchCode) ? person.BranchCode.Replace(Environment.NewLine, "<br />") : "" %>
         </address>
 
         <h5 class="md-title"><i class="fa fa-bank"></i> Paypal Details</h5>

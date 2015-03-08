@@ -18,6 +18,7 @@
                             <thead class="datatableHeaders">
                                 <tr>
                                     <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">View</th>
+                                    <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">Video</th>
                                     <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">Title</th>
                                     <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">Alias</th>
                                     <th style="background-color:#554337; color: #FFFFFF; border-bottom: 0px;">Contributor</th>
@@ -36,7 +37,7 @@
             </div>
         </div>
     </div>
-
+    
     <script>
         jQuery(document).ready(function () {
             dTable = $('#videos').dataTable({
@@ -53,9 +54,10 @@
                 type: 'GET',
                 pageLength: 10,
                 language: { "sSearch": "" },
-                order: [1, "asc"],
+                order: [2, "asc"],
                 "columns": [
                     { orderable: false, "render": function (data, type, full, meta) { return "<a href=\"javascript:void(0);\" onclick=\"location.href='/video/" + full.Id + "';\")\">View</a>" } },
+                    { orderable: false, "render": function (data, type, full, meta) { return "<a href=\"http://www.youtube.com/embed/" + full.YoutubeId + "\" class=\"youtube\">Video</a>" } },
                     { "data": "Title", orderable: true },
                     { "data": "Alias", orderable: true },
                     { "data": "Contributor", orderable: true },
@@ -71,6 +73,10 @@
                 //e.preventDefault();
                 //var dData = dTable.fnGetData(this, 0);
                 //location.href = "/video/" + dData;
+            });
+
+            $('#videos').on('draw.dt', function () {
+                $(".youtube").YouTubeModal({ autoplay: 0, width: 640, height: 480 });
             });
 
             jQuery('div.dataTables_filter input').addClass('form-control');
@@ -89,4 +95,5 @@
     <script src="/js/jquery.dataTables.min.js"></script>
     <script src="/js/dataTables.bootstrap.js"></script>
     <script src="/js/dataTables.responsive.js"></script>
+    <script src="/js/bootstrap.youtubepopup.min.js"></script>
 </asp:Content>

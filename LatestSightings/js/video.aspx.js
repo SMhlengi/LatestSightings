@@ -85,3 +85,44 @@ function addThirdParty() {
         }
     });
 }
+
+function Recalculate() {
+    $.ajax({
+        url: "/Video.aspx/Recalculate",
+        type: "POST",
+        cache: false,
+        data: JSON.stringify({ id: videoId }),
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            if (data.d.length > 0) {
+                $.gritter.add(
+                {
+                    title: "Video will calculate on next service run",
+                    class_name: 'growl-success',
+                    image: '/images/screen.png',
+                    sticky: false,
+                    time: 6000
+                });
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+
+        }
+    });
+}
+
+$(".confirm").confirm({
+    text: "Are you sure you want to recalculate?",
+    title: "Recalculate",
+    confirm: function (button) {
+        Recalculate();
+    },
+    cancel: function (button) {
+        //alert('no');
+    },
+    confirmButton: "Yes I am",
+    cancelButton: "No",
+    post: true,
+    confirmButtonClass: "btn-danger",
+    cancelButtonClass: "btn-default"
+});

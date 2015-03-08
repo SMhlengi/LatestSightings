@@ -93,7 +93,7 @@ namespace LatestSightings
             {
                 if (mnth.EstimatedEarnings > 0)
                 {
-                    txtEstimated.Text = Math.Round(mnth.EstimatedEarnings, 2).ToString();
+                    txtEstimated.Text = Math.Round(mnth.EstimatedEarnings, 3).ToString();
                 }
                 else
                 {
@@ -101,7 +101,7 @@ namespace LatestSightings
                 }
                 if (mnth.EstimatedEarningsSupplied > 0)
                 {
-                    txtOverRide.Text = Math.Round(mnth.EstimatedEarningsSupplied, 2).ToString();
+                    txtOverRide.Text = Math.Round(mnth.EstimatedEarningsSupplied, 3).ToString();
                 }
                 else
                 {
@@ -109,7 +109,7 @@ namespace LatestSightings
                 }
                 if (mnth.Earnings > 0)
                 {
-                    txtRecieved.Text = Math.Round(mnth.Earnings, 2).ToString();
+                    txtRecieved.Text = Math.Round(mnth.Earnings, 3).ToString();
                 }
                 else
                 {
@@ -117,7 +117,7 @@ namespace LatestSightings
                 }
                 if (mnth.ExchangeRate > 0)
                 {
-                    txtExchange.Text = Math.Round(mnth.ExchangeRate, 5).ToString();
+                    txtExchange.Text = Math.Round(mnth.ExchangeRate, 3).ToString();
                 }
                 else
                 {

@@ -172,7 +172,7 @@ namespace LatestSightings
                             if (cntrCurPayments != null && cntrCurPayments.Count > 0)
                                 total += cntrCurPayments.Sum(x => x.Payment);
 
-                            item.GetType().GetProperty("Currency" + currency.Id).SetValue(item, Math.Round(total, 2, MidpointRounding.AwayFromZero), null);
+                            item.GetType().GetProperty("Currency" + currency.Id).SetValue(item, Math.Round(total, 3, MidpointRounding.AwayFromZero), null);
                         }
                     }
 

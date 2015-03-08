@@ -173,6 +173,7 @@
     <Content Include="fonts\WeatherIcons-Regular.otf" />
     <Content Include="GalleryData.aspx" />
     <Content Include="Graphs.aspx" />
+    <Content Include="Images.aspx" />
     <Content Include="images\.DS_Store" />
     <Content Include="images\colorpicker\.DS_Store" />
     <Content Include="images\colorpicker\Thumbs.db" />
@@ -190,6 +191,7 @@
     <Content Include="images\sort_desc_disabled.png" />
     <Content Include="js\.DS_Store" />
     <Content Include="js\additional-methods.js" />
+    <Content Include="js\bootstrap.youtubepopup.min.js" />
     <Content Include="js\ckeditor\LICENSE.md" />
     <Content Include="js\ckeditor\plugins\scayt\LICENSE.md" />
     <Content Include="js\ckeditor\plugins\scayt\README.md" />
@@ -206,6 +208,8 @@
     <Content Include="js\article.js" />
     <Content Include="js\flot\.DS_Store" />
     <Content Include="DefaultMaster.Master" />
+    <Content Include="js\images.js" />
+    <Content Include="js\jquery.confirm.min.js" />
     <Content Include="js\VideoSorting.js" />
     <Content Include="packages.config" />
     <Content Include="assets\tinymce\langs\readme.md" />
@@ -888,6 +892,13 @@
     </Compile>
     <Compile Include="Graphs.aspx.designer.cs">
       <DependentUpon>Graphs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Images.aspx.cs">
+      <DependentUpon>Images.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Images.aspx.designer.cs">
+      <DependentUpon>Images.aspx</DependentUpon>
     </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

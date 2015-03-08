@@ -121,6 +121,24 @@ namespace LatestSightings {
         protected global::System.Web.UI.WebControls.HyperLink ipLink;
         
         /// <summary>
+        /// divContributor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContributor;
+        
+        /// <summary>
+        /// txtContributor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtContributor;
+        
+        /// <summary>
         /// ddlRevenueShare control.
         /// </summary>
         /// <remarks>
@@ -157,6 +175,15 @@ namespace LatestSightings {
         protected global::System.Web.UI.WebControls.TextBox txtNotes;
         
         /// <summary>
+        /// chbxStream control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chbxStream;
+        
+        /// <summary>
         /// btnSave control.
         /// </summary>
         /// <remarks>
@@ -164,6 +191,24 @@ namespace LatestSightings {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSave;
+        
+        /// <summary>
+        /// btnWatch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnWatch;
+        
+        /// <summary>
+        /// divRecalculate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divRecalculate;
         
         /// <summary>
         /// ddlSelectThirdParty control.

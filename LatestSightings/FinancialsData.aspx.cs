@@ -139,6 +139,7 @@ namespace LatestSightings
                     item.Id = vid.Id;
                     item.Contributor = vid.Person.FirstName + " " + vid.Person.LastName;
                     item.YouTubeEarnings = GetYouTubeEarnings(vid.YoutubeId);
+                    item.LiveStream = vid.IsLiveStream;
                     List<ThirdPartyPayment> thirdPayments = GetThirdPartyPayments(vid.Id);
                     UpdateThirdPartyPayments(ref item, thirdPayments);
 
@@ -166,7 +167,7 @@ namespace LatestSightings
             {
                 foreach (ThirdPartyPayment paid in thirdPayments)
                 {
-                    item.GetType().GetProperty("Currency" + paid.Currency).SetValue(item, Math.Round(paid.Payment, 2, MidpointRounding.AwayFromZero), null);
+                    item.GetType().GetProperty("Currency" + paid.Currency).SetValue(item, Math.Round(paid.Payment, 3, MidpointRounding.AwayFromZero), null);
                 }
             }
         }
@@ -348,6 +349,7 @@ namespace LatestSightings
         public string Id { get; set; }
         public string Title { get; set; }
         public string Contributor { get; set; }
+        public bool LiveStream { get; set; }
         public decimal YouTubeEarnings { get; set; }
         public string YouTubeId { get; set; }
         public string RevenueShare { get; set; }

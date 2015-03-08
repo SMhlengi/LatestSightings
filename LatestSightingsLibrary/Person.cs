@@ -25,10 +25,14 @@ namespace LatestSightingsLibrary
         public string Facebook { get; set; }
         public string Skype { get; set; }
         public string Twitter { get; set; }
+        public string AccountType { get; set; }
+        public string AccountNumber { get; set; }
+        public string BranchName { get; set; }
+        public string BranchCode { get; set; }
         public bool Active { get; set; }
 
-        private const string SQL_INSERT_PERSON = "INSERT INTO latestsightings.dbo.people (id, firstname, lastname, email, password, active, role, cellNumber, telNumber, otherContact, twitter, facebook, skype, address, banking, paypal) VALUES (@id, @firstname, @lastname, @email, @password, @active, @role, @cellNumber, @telNumber, @otherContact, @twitter, @facebook, @skype, @address, @banking, @paypal);";
-        private const string SQL_UPDATE_PERSON = "UPDATE latestsightings.dbo.people SET firstname = @firstname, lastname = @lastname, email = @email, password = @password, active = @active, role = @role, cellNumber = @cellNumber, telNumber = @telNumber, otherContact = @otherContact, twitter = @twitter, facebook = @facebook, skype = @skype, address = @address, banking = @banking, paypal = @paypal, modified = @modified WHERE (id = @id);";
+        private const string SQL_INSERT_PERSON = "INSERT INTO latestsightings.dbo.people (id, firstname, lastname, email, password, active, role, cellNumber, telNumber, otherContact, twitter, facebook, skype, address, banking, paypal, accountType, accountNumber, branchName, branchCode) VALUES (@id, @firstname, @lastname, @email, @password, @active, @role, @cellNumber, @telNumber, @otherContact, @twitter, @facebook, @skype, @address, @banking, @paypal, @accountType, @accountNumber, @branchName, @branchCode);";
+        private const string SQL_UPDATE_PERSON = "UPDATE latestsightings.dbo.people SET firstname = @firstname, lastname = @lastname, email = @email, password = @password, active = @active, role = @role, cellNumber = @cellNumber, telNumber = @telNumber, otherContact = @otherContact, twitter = @twitter, facebook = @facebook, skype = @skype, address = @address, banking = @banking, paypal = @paypal, modified = @modified, accountType = @accountType, accountNumber = @accountNumber, branchName = @branchName, branchCode = @branchCode WHERE (id = @id);";
 
         public static Person GetPerson(string id)
         {
@@ -62,6 +66,10 @@ namespace LatestSightingsLibrary
                         person.OtherContact = rdr["otherContact"].ToString();
                         person.Skype = rdr["skype"].ToString();
                         person.TelephoneNumber = rdr["telNumber"].ToString();
+                        person.BranchCode = rdr["branchCode"].ToString();
+                        person.BranchName = rdr["branchName"].ToString();
+                        person.AccountNumber = rdr["accountNumber"].ToString();
+                        person.AccountType = rdr["accountType"].ToString();
                         person.Twitter = rdr["twitter"].ToString();
                     }
                 }
@@ -189,6 +197,10 @@ namespace LatestSightingsLibrary
                 sqlQuery.Parameters.Add("address", System.Data.SqlDbType.VarChar).Value = person.Address == null ? string.Empty : person.Address;
                 sqlQuery.Parameters.Add("banking", System.Data.SqlDbType.VarChar).Value = person.Banking == null ? string.Empty : person.Banking;
                 sqlQuery.Parameters.Add("paypal", System.Data.SqlDbType.VarChar).Value = person.Paypal == null ? string.Empty : person.Paypal;
+                sqlQuery.Parameters.Add("accountType", System.Data.SqlDbType.VarChar).Value = person.AccountType == null ? string.Empty : person.AccountType;
+                sqlQuery.Parameters.Add("accountNumber", System.Data.SqlDbType.VarChar).Value = person.AccountNumber == null ? string.Empty : person.AccountNumber;
+                sqlQuery.Parameters.Add("branchName", System.Data.SqlDbType.VarChar).Value = person.BranchName == null ? string.Empty : person.BranchName;
+                sqlQuery.Parameters.Add("branchCode", System.Data.SqlDbType.VarChar).Value = person.BranchCode == null ? string.Empty : person.BranchCode;
                 sqlQuery.Parameters.Add("modified", System.Data.SqlDbType.DateTime).Value = DateTime.Now;
                 sqlQuery.ExecuteNonQuery();
                 conn.Close();

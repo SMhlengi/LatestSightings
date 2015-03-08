@@ -102,7 +102,7 @@ namespace LatestSightings
                 {
                     foreach (ThirdPartyPayment paid in thirdPayments)
                     {
-                        item.GetType().GetProperty("Currency" + paid.Currency).SetValue(item, Math.Round(paid.Payment, 2, MidpointRounding.AwayFromZero), null);
+                        item.GetType().GetProperty("Currency" + paid.Currency).SetValue(item, Math.Round(paid.Payment, 3, MidpointRounding.AwayFromZero), null);
                     }
                 }
             }

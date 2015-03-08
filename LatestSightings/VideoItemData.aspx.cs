@@ -70,7 +70,7 @@ namespace LatestSightings
                     item.Year = analytic.Year;
                     item.Month = analytic.Month;
                     item.ItemMonth = analytic.Year.ToString() + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(analytic.Month);
-                    item.YouTubeEarnings = analytic.Earning > 0 ? analytic.Earning : analytic.EstimatedEarning;
+                    item.YouTubeEarnings = analytic.Earning > 0 ? Math.Round(analytic.Earning, 3, MidpointRounding.AwayFromZero) : Math.Round(analytic.EstimatedEarning, 3, MidpointRounding.AwayFromZero);
                     item.Views = analytic.Views;
                     UpdateThirdPartyPayments(ref item, thirdPayments);
 
@@ -105,7 +105,7 @@ namespace LatestSightings
                 {
                     foreach (ThirdPartyPayment paid in newthirdPayments)
                     {
-                        item.GetType().GetProperty("Currency" + paid.Currency).SetValue(item, Math.Round(paid.Payment, 2, MidpointRounding.AwayFromZero), null);
+                        item.GetType().GetProperty("Currency" + paid.Currency).SetValue(item, Math.Round(paid.Payment, 3, MidpointRounding.AwayFromZero), null);
                     }
                 }
             }

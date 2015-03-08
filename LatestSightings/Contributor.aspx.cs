@@ -69,6 +69,10 @@ namespace LatestSightings
                 txtSurname.Text = person.LastName;
                 txtTelNumber.Text = person.TelephoneNumber;
                 txtTwitter.Text = person.Twitter;
+                txtAccountNo.Text = person.AccountNumber;
+                txtAccountType.Text = person.AccountType;
+                txtBranchName.Text = person.BranchName;
+                txtBranchCode.Text = person.BranchCode;
 
                 switch (person.Role)
                 {
@@ -108,6 +112,10 @@ namespace LatestSightings
             person.Twitter = txtTwitter.Text;
             person.Active = chbxActive.Checked;
             person.Password = txtPassword.Text;
+            person.AccountType = txtAccountType.Text;
+            person.AccountNumber = txtAccountNo.Text;
+            person.BranchCode = txtBranchCode.Text;
+            person.BranchName = txtBranchName.Text;
 
             int role = 3;
             if (rdbAdmin.Checked)

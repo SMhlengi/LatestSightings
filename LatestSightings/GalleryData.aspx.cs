@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Web.Script.Services;
 using System.Web.Services;
 using LatestSightingsLibrary;
+using System.Globalization;
 
 namespace LatestSightings
 {
@@ -35,6 +36,16 @@ namespace LatestSightings
         }
 
         [WebMethod, ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = false)]
+        public static List<GalleryItem> GetImageGallery(string dateCombo, string approved, string notApproved)
+        {
+            List<GalleryItem> items = new List<GalleryItem>();
+
+            items = Galleries.GetImages(Convert.ToInt32(DateTime.ParseExact(dateCombo, "MMMM yyyy", CultureInfo.CurrentCulture).Year), Convert.ToInt32(DateTime.ParseExact(dateCombo, "MMMM yyyy", CultureInfo.CurrentCulture).Month), Convert.ToBoolean(approved), Convert.ToBoolean(notApproved));
+
+            return items;
+        }
+
+        [WebMethod, ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = false)]
         public static List<GalleryItem> GetFeatured(string type)
         {
             List<GalleryItem> items = new List<GalleryItem>();
@@ -54,6 +65,12 @@ namespace LatestSightings
         public static string UpdateFeaturedOrder(string type, string itemList)
         {
             return Galleries.UpdateFeaturedOrder(Galleries.GalleryType.Video, itemList).ToString();
+        }
+
+        [WebMethod, ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = false)]
+        public static string UpdateImageStatus(string id, string status)
+        {
+            return Galleries.UpdateImageStatus(id, Convert.ToBoolean(status)).ToString();
         }
     }
 }

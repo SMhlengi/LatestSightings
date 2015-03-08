@@ -23,15 +23,16 @@ namespace LatestSightingsLibrary
         public string Notes { get; set; }
         public string Status { get; set; }
         public string YoutubeId { get; set; }
+        public bool IsLiveStream { get; set; }
         public DateTime DateUploaded { get; set; }
         public DateTime DateRemoved { get; set; }
         public List<ThirdPartyVideo> ThirdParties { get; set; }
 
         private const string SQL_CHECK_VIDEO_BYID = "SELECT COUNT(Id) FROM latestsightings.dbo.videos WHERE (id = @id);";
         private const string SQL_GET_VIDEO = "SELECT * FROM latestsightings.dbo.videos WHERE (id = @id);";
-        private const string SQL_INSERT_VIDEO = "INSERT INTO latestsightings.dbo.videos (contributor, id, title, alias, dateRecieved, ipDate, ipDocument, revenueShare, keywords, region, notes, created, modified, status, youtubeId, dateUploaded, dateRemoved) VALUES (@contributor, @id, @title, @alias, @dateRecieved, @ipDate, @ipDocument, @revenueShare, @keywords, @region, @notes, @created, @modified, @status, @youtubeId, @dateUploaded, @dateRemoved);";
-        private const string SQL_UPDATE_VIDEO = "UPDATE latestsightings.dbo.videos SET title = @title, alias = @alias, dateRecieved = @dateRecieved, ipDate = @ipDate, ipDocument = @ipDocument, revenueShare = @revenueShare, keywords = @keywords, region = @region, notes = @notes, modified = @modified, status = @status, youtubeId = @youtubeId, dateUploaded = @dateUploaded, dateRemoved = @dateRemoved WHERE (id = @id);";
-        private const string SQL_GET_VIDEOS_COMPACT = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor ORDER BY a.Title";
+        private const string SQL_INSERT_VIDEO = "INSERT INTO latestsightings.dbo.videos (contributor, id, title, alias, dateRecieved, ipDate, ipDocument, revenueShare, keywords, region, notes, created, modified, status, youtubeId, dateUploaded, dateRemoved, liveStream) VALUES (@contributor, @id, @title, @alias, @dateRecieved, @ipDate, @ipDocument, @revenueShare, @keywords, @region, @notes, @created, @modified, @status, @youtubeId, @dateUploaded, @dateRemoved, @liveStream);";
+        private const string SQL_UPDATE_VIDEO = "UPDATE latestsightings.dbo.videos SET title = @title, alias = @alias, dateRecieved = @dateRecieved, ipDate = @ipDate, ipDocument = @ipDocument, revenueShare = @revenueShare, keywords = @keywords, region = @region, notes = @notes, modified = @modified, status = @status, youtubeId = @youtubeId, dateUploaded = @dateUploaded, dateRemoved = @dateRemoved, contributor = @contributor, liveStream = @liveStream WHERE (id = @id);";
+        private const string SQL_GET_VIDEOS_COMPACT = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, a.liveStream, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor ORDER BY a.Title";
         private const string SQL_GET_VIDEOS_COMPACT_BYPENDING = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor WHERE (status = 'Pending') ORDER BY a.Title";
         private const string SQL_GET_VIDEOS_COMPACT_BYPUBLISHED = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor WHERE (status = 'Published') ORDER BY a.Title";
         private const string SQL_GET_VIDEOS_COMPACT_BYNOTPENDING = "SELECT a.id, a.title, a.alias, a.revenueShare, a.YoutubeId, b.id As Contributor, b.firstname, b.lastname FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.people b ON b.id = a.contributor WHERE (status <> 'Pending') ORDER BY a.Title";
@@ -44,6 +45,8 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_ANALYTICS__ALL_BY_CONTRIBUTOR = "SELECT a.* FROM latestsightings.dbo.videosAnalytics a INNER JOIN latestsightings.dbo.videos b ON b.YoutubeId = a.VideoId WHERE (a.year = @year AND a.month = @month AND b.contributor = @contributor);";
         private const string SQL_GET_ANALYTICS_BY_Id = "SELECT * FROM latestsightings.dbo.videosAnalytics WHERE (videoId = @videoId);";
         private const string SQL_GET_ANALYTICS_BY_CONTRIBUTOR = "  SELECT a.year, a.month, SUM(a.youtubeEarnings) AS Total FROM [latestsightings].[dbo].[videosAnalytics] a INNER JOIN [latestsightings].[dbo].[videos] b ON b.youtubeId = a.videoId WHERE (b.contributor = @contributor) GROUP BY a.year, a.month;";
+        private const string SQL_UPDATE_RECALCULATE_STATUS = "UPDATE latestsightings.dbo.videos SET recalculate = @recalculate WHERE (id = @id);";
+        private const string SQL_GET_VIDEOS_TORECALCULATE = "SELECT * FROM latestsightings.dbo.videos WHERE (Recalculate = 1);";
 
         public static bool SaveVideo(Video video)
         {
@@ -71,6 +74,7 @@ namespace LatestSightingsLibrary
                 sqlQuery.Parameters.Add("modified", System.Data.SqlDbType.DateTime).Value = DateTime.Now;
                 sqlQuery.Parameters.Add("status", System.Data.SqlDbType.VarChar).Value = video.Status;
                 sqlQuery.Parameters.Add("contributor", System.Data.SqlDbType.VarChar).Value = video.Contributor;
+                sqlQuery.Parameters.Add("liveStream", System.Data.SqlDbType.Bit).Value = video.IsLiveStream;
                 sqlQuery.Parameters.Add("youtubeId", System.Data.SqlDbType.VarChar).Value = video.YoutubeId;
                 sqlQuery.Parameters.Add("dateUploaded", System.Data.SqlDbType.DateTime).Value = video.DateUploaded;
                 sqlQuery.Parameters.Add("dateRemoved", System.Data.SqlDbType.DateTime).Value = video.DateRemoved;
@@ -164,6 +168,7 @@ namespace LatestSightingsLibrary
                         vid.DateUploaded = Convert.ToDateTime(rdr["dateUploaded"]);
                         vid.DateRemoved = Convert.ToDateTime(rdr["dateRemoved"]);
                         vid.ThirdParties = ThirdPartyVideo.GetVideos(videoId);
+                        vid.IsLiveStream = Convert.ToBoolean(rdr["liveStream"]);
                     }
                 }
                 rdr.Close();
@@ -204,6 +209,7 @@ namespace LatestSightingsLibrary
                         video.RevenueShare = rdr["revenueShare"].ToString();
                         video.Title = rdr["title"].ToString();
                         video.YoutubeId = rdr["YoutubeId"].ToString();
+                        video.IsLiveStream = Convert.ToBoolean(rdr["liveStream"]);
 
                         Person person = new Person();
                         person.Id = rdr["Contributor"].ToString();
@@ -473,8 +479,8 @@ namespace LatestSightingsLibrary
                     {
                         YouTubeVideoAnalytics vid = new YouTubeVideoAnalytics();
                         vid.Id = rdr["videoId"].ToString();
-                        vid.Earning = Math.Round(Convert.ToDecimal(rdr["youtubeEarnings"]), 2);
-                        vid.EstimatedEarning = Math.Round(Convert.ToDecimal(rdr["youtubeEarningEstimate"]), 2);
+                        vid.Earning = Math.Round(Convert.ToDecimal(rdr["youtubeEarnings"]), 3);
+                        vid.EstimatedEarning = Math.Round(Convert.ToDecimal(rdr["youtubeEarningEstimate"]), 3);
                         vid.LastRun = Convert.ToDateTime(rdr["youtubeLastRun"]);
                         vid.Views = Convert.ToInt64(rdr["views"]);
                         videos.Add(vid);
@@ -515,7 +521,7 @@ namespace LatestSightingsLibrary
                     {
                         YouTubeVideoAnalytics vid = new YouTubeVideoAnalytics();
                         vid.Id = string.Empty;
-                        vid.Earning = Math.Round(Convert.ToDecimal(rdr["Total"]), 2);
+                        vid.Earning = Math.Round(Convert.ToDecimal(rdr["Total"]), 3);
                         vid.EstimatedEarning = 0;
                         vid.Month = Convert.ToInt32(rdr["month"]);
                         vid.Year = Convert.ToInt32(rdr["year"]);
@@ -561,8 +567,8 @@ namespace LatestSightingsLibrary
                     {
                         YouTubeVideoAnalytics vid = new YouTubeVideoAnalytics();
                         vid.Id = rdr["videoId"].ToString();
-                        vid.Earning = Math.Round(Convert.ToDecimal(rdr["youtubeEarnings"]), 2);
-                        vid.EstimatedEarning = Math.Round(Convert.ToDecimal(rdr["youtubeEarningEstimate"]), 2);
+                        vid.Earning = Math.Round(Convert.ToDecimal(rdr["youtubeEarnings"]), 3);
+                        vid.EstimatedEarning = Math.Round(Convert.ToDecimal(rdr["youtubeEarningEstimate"]), 3);
                         vid.LastRun = Convert.ToDateTime(rdr["youtubeLastRun"]);
                         vid.Views = Convert.ToInt64(rdr["views"]);
                         videos.Add(vid);
@@ -618,6 +624,66 @@ namespace LatestSightingsLibrary
             return updated;
         }
 
+        public static bool UpDateEarnings(string id, int year, int month)
+        {
+            bool updated = true;
+
+            LatestSightingsLibrary.Month mnth = LatestSightingsLibrary.Month.GetMonth(year, month);
+            if (mnth != null && mnth.ExchangeRate > 0)
+            {
+                LatestSightingsLibrary.Video vidRate = LatestSightingsLibrary.Video.GetVideo(id);
+                YouTubeVideoAnalytics vid = GetYouTubeVideoAnalytics(vidRate.YoutubeId, year, month);
+                if (vid != null && vidRate != null)
+                {
+                    if (vid.EstimatedEarning > 0 && !String.IsNullOrEmpty(vidRate.RevenueShare))
+                    {
+                        try
+                        {
+                            vid.Earning = Financial.ApplyExchangeRate(vid.EstimatedEarning, mnth.ExchangeRate);
+                            vid.Earning = Financial.ApplyRevenueShare(vid.Earning, vidRate.RevenueShare);
+                            SaveYouTubeVideoAnalytics(vid, mnth.YearNumber, mnth.MonthNumber);
+                        }
+                        catch (Exception ex)
+                        {
+                            updated = false;
+                        }
+                    }
+                }
+            }
+
+            return updated;
+        }
+
+        public static bool SetRecalculate(string id, bool recalculate)
+        {
+            bool saved = false;
+
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.Connection = conn;
+                sqlQuery.CommandText = SQL_UPDATE_RECALCULATE_STATUS;
+                sqlQuery.Parameters.Add("id", System.Data.SqlDbType.VarChar).Value = id;
+                sqlQuery.Parameters.Add("recalculate", System.Data.SqlDbType.Bit).Value = recalculate;
+                sqlQuery.ExecuteNonQuery();
+                conn.Close();
+
+                saved = true;
+            }
+            catch (Exception ex)
+            {
+                ExHandler.RecordError(ex);
+            }
+            finally
+            {
+                conn.Dispose();
+            }
+
+            return saved;
+        }
+
         private static bool YouTubeVideoAnalyticExists(string id, int year, int month)
         {
             bool exists = false;
@@ -648,6 +714,46 @@ namespace LatestSightingsLibrary
             }
 
             return exists;
+        }
+
+        public static List<Video> GetVideoToRecalculate()
+        {
+            List<Video> videos = null;
+
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.Connection = conn;
+                sqlQuery.CommandText = SQL_GET_VIDEOS_TORECALCULATE;
+                SqlDataReader rdr = sqlQuery.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    videos = new List<Video>();
+                    while (rdr.Read())
+                    {
+                        Video video = new Video();
+                        video.Id = rdr["id"].ToString();
+                        video.YoutubeId = rdr["YoutubeId"].ToString();
+                        video.DateUploaded = Convert.ToDateTime(rdr["Created"].ToString());
+
+                        videos.Add(video);
+                    }
+                }
+                rdr.Close();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                ExHandler.RecordError(ex);
+            }
+            finally
+            {
+                conn.Dispose();
+            }
+
+            return videos;
         }
     }
 }

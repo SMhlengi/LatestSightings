@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace LatestSightingsLibrary
 {
@@ -25,6 +27,9 @@ namespace LatestSightingsLibrary
         private const string SQL_DELETE_FEATURED_VIDEO = "DELETE FROM latestsightings.dbo.featuredItems WHERE (type = 'video');";
         private const string SQL_DELETE_FEATURED_CATEGORY = "DELETE FROM latestsightings.dbo.featuredItems WHERE (type = 'category');";
         private const string SQL_DELETE_FEATURED_ARTICLE = "DELETE FROM latestsightings.dbo.featuredItems WHERE (type = 'article');";
+
+        private const string SQL_SELECT_IMAGES = "SELECT * FROM latestsightings.dbo.images WHERE (Display = @approved OR Display = @notapproved) AND (YEAR(dateAdded) = @year AND MONTH(dateAdded) = @month) ORDER BY dateAdded";
+        private const string SQL_UPDATE_IMAGE_STATUS = "UPDATE latestsightings.dbo.images SET Display = @display WHERE (id = @id);";
 
         private const int videoFeatuered = 5;
 
@@ -102,6 +107,53 @@ namespace LatestSightingsLibrary
 
         private static List<GalleryItem> RankSearch(ref List<GalleryItem> items, string query, string[] keywords)
         {
+            return items;
+        }
+
+        public static List<GalleryItem> GetImages(int year, int month, bool approved, bool notApproved)
+        {
+            List<GalleryItem> items = null;
+
+            if (approved || notApproved)
+            {
+                SqlConnection conn = data.Conn();
+                try
+                {
+                    conn.Open();
+                    SqlCommand sqlQuery = new SqlCommand();
+                    sqlQuery.Connection = conn;
+                    sqlQuery.CommandText = SQL_SELECT_IMAGES;
+                    sqlQuery.Parameters.Add("@approved", System.Data.SqlDbType.Bit).Value = approved;
+                    sqlQuery.Parameters.Add("@notapproved", System.Data.SqlDbType.Bit).Value = notApproved == true ? false : true;
+                    sqlQuery.Parameters.Add("@year", System.Data.SqlDbType.Int).Value = year;
+                    sqlQuery.Parameters.Add("@month", System.Data.SqlDbType.Int).Value = month;
+                    SqlDataReader rdr = sqlQuery.ExecuteReader();
+                    if (rdr.HasRows)
+                    {
+                        items = new List<GalleryItem>();
+                        while (rdr.Read())
+                        {
+                            GalleryItem item = new GalleryItem();
+                            item.Id = rdr["id"].ToString();
+                            item.Url = ConfigurationManager.AppSettings["uploadedImagesUrlThumb"] + rdr["eightyByEighty"].ToString();
+                            item.Title = ConfigurationManager.AppSettings["uploadedImagesUrl"] + rdr["original"].ToString();
+                            item.Description = Convert.ToBoolean(rdr["display"]).ToString();
+                            items.Add(item);
+                        }
+                    }
+                    rdr.Close();
+                    conn.Close();
+                }
+                catch (Exception ex)
+                {
+                    ExHandler.RecordError(ex);
+                }
+                finally
+                {
+                    conn.Dispose();
+                }
+            }
+
             return items;
         }
 
@@ -530,6 +582,35 @@ namespace LatestSightingsLibrary
                     conn.Close();
                 }
 
+                updated = true;
+            }
+            catch (Exception ex)
+            {
+                ExHandler.RecordError(ex);
+            }
+            finally
+            {
+                conn.Dispose();
+            }
+
+            return updated;
+        }
+
+        public static bool UpdateImageStatus(string id, bool status)
+        {
+            bool updated = false;
+
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.CommandText = SQL_UPDATE_IMAGE_STATUS;
+                sqlQuery.Parameters.Add("display", System.Data.SqlDbType.Bit).Value = status;
+                sqlQuery.Parameters.Add("id", System.Data.SqlDbType.Int).Value = id;
+                updated = data.ExecuteNonQuery(sqlQuery);
+
+                conn.Close();
                 updated = true;
             }
             catch (Exception ex)

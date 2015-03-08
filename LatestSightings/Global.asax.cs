@@ -72,6 +72,7 @@ namespace LatestSightings
             routes.MapPageRoute("", "user", "~/user.aspx");
             routes.MapPageRoute("", "category/featured", "~/featuredcategories.aspx");
             routes.MapPageRoute("", "articles/featured", "~/featuredarticles.aspx");
+            routes.MapPageRoute("", "images/display", "~/images.aspx");
 
             routes.MapPageRoute("", "articles", "~/articles.aspx");
             routes.MapPageRoute("cms-add-new-article",

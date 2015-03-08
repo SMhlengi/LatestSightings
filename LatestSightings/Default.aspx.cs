@@ -1,8 +1,10 @@
 ﻿using LatestSightingsLibrary;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -16,6 +18,8 @@ namespace LatestSightings
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+
             var master = Master as DefaultMaster;
             if (master != null)
             {
@@ -42,7 +46,7 @@ namespace LatestSightings
                 earMnthTot.InnerHtml = mnth.EstimatedEarnings.ToString("G29");
 
                 viewMnth.InnerHtml = curMonth.ToString("MMMM") + " Views";
-                viewMnthTot.InnerHtml = mnth.Views.ToString();
+                viewMnthTot.InnerHtml = string.Format(nfi, "{0:#,###0.#}", mnth.Views);
 
                 for (int i = 1; i < 3; i++)
                 {
@@ -58,7 +62,7 @@ namespace LatestSightings
                             if (tmpMnth != null)
                             {
                                 earMnth1Tot.InnerHtml = "$" + tmpMnth.EstimatedEarnings.ToString("G29");
-                                viewMnthTot1.InnerHtml = tmpMnth.Views.ToString();
+                                viewMnthTot1.InnerHtml = string.Format(nfi, "{0:#,###0.#}", tmpMnth.Views);
                             }
                             break;
                         case 2:
@@ -67,7 +71,7 @@ namespace LatestSightings
                             if (tmpMnth != null)
                             {
                                 earMnth2Tot.InnerHtml = "$" + tmpMnth.EstimatedEarnings.ToString("G29");
-                                viewMnthTot2.InnerHtml = tmpMnth.Views.ToString();
+                                viewMnthTot2.InnerHtml = string.Format(nfi, "{0:#,###0.#}", tmpMnth.Views);
                             }
                             break;
                         default:

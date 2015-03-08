@@ -11,7 +11,7 @@ namespace LatestSightingsLibrary
         {
             decimal rate = 0;
 
-            rate = Math.Round(value1 / value2, 5);
+            rate = Math.Round(value1 / value2, 8);
 
             return rate;
         }
@@ -20,7 +20,7 @@ namespace LatestSightingsLibrary
         {
             decimal newValue = 0;
 
-            newValue = Math.Round(value * exchangeRate, 2, MidpointRounding.AwayFromZero);
+            newValue = Math.Round(value * exchangeRate, 8, MidpointRounding.AwayFromZero);
 
             return newValue;
         }
@@ -33,7 +33,7 @@ namespace LatestSightingsLibrary
             if (converted)
             {
                 newValue = (value / Convert.ToDecimal(100)) * contributorShare;
-                newValue = Math.Round(newValue, 2, MidpointRounding.AwayFromZero);
+                newValue = Math.Round(newValue, 8, MidpointRounding.AwayFromZero);
             }
 
             return newValue;

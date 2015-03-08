@@ -97,6 +97,7 @@ namespace LatestSightingsService
         public void Run()
         {
             YouTubeVideos ytVideos = new YouTubeVideos();
+            ytVideos.RecalculateVideos();
 
             ytVideos.UpdateVideoDetails();
 
