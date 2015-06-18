@@ -11,15 +11,18 @@ namespace LatestSightingsLibrary
     public class Galleries
     {
         public enum GalleryType { Image, Video, Category, Article }
+        public enum VideoSearchType { Title, Keywords }
 
-        private const string SQL_GET_VIDEO_GALLERY_LATEST = "SELECT TOP 50 a.Id, a.Title, b.Description, b.imageDefault As Url FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.youTubeVideo b ON b.Id = a.YoutubeId WHERE (a.Status = 'Published' AND a.youtubeId <> '') ORDER BY a.Created DESC";
-        private const string SQL_GET_VIDEO_GALLERY_SEARCH = "SELECT a.Id, a.Title, b.Description, b.imageDefault As Url FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.youTubeVideo b ON b.Id = a.YoutubeId WHERE (a.Status = 'Published' AND a.youtubeId <> '' AND a.Title LIKE '%#TERM%') ORDER BY a.Title DESC";
-        private const string SQL_GET_IMAGE_GALLERY_LATEST = "";
-        private const string SQL_GET_VIDEO_FEATURED = "SELECT b.Id, b.Title, a.Sorting, c.Description, c.imageDefault As Url FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.videos b ON b.Id = a.Id INNER JOIN latestsightings.dbo.youTubeVideo c ON c.Id = b.YouTubeId WHERE (a.Type = 'video') ORDER BY a.Sorting;";
+        private const string SQL_GET_VIDEO_GALLERY_LATEST = "SELECT TOP (@quantity) a.Id, a.Title, a.youtubeId, b.Description, b.imageDefault As Url, b.imageHigh as Url2 , b.imageMedium as Url3 FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.youTubeVideo b ON b.Id = a.YoutubeId WHERE (a.Status = 'Published' AND a.youtubeId <> '') ORDER BY a.Created DESC";
+        private const string SQL_GET_VIDEO_GALLERY_SEARCH = "SELECT a.Id, a.Title, a.youtubeId, b.Description, b.imageDefault As Url FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.youTubeVideo b ON b.Id = a.YoutubeId WHERE (a.Status = 'Published' AND a.youtubeId <> '' AND a.Title LIKE '%#TERM%') ORDER BY a.Title DESC";
+        private const string SQL_GET_VIDEO_GALLERY_WITH_ONLY_KEYWORDS_SEARCH = "SELECT a.Id, a.Title, a.youtubeId, b.Description, b.imageDefault As Url FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.youTubeVideo b ON b.Id = a.YoutubeId WHERE (a.Status = 'Published' AND a.youtubeId <> '' AND a.Keywords LIKE '%#Keywords%') ORDER BY a.Title DESC";
+        private const string SQL_GET_VIDEO_GALLERY_WITH_TITLE_AND_KEYWORDS_SEARCH = "SELECT a.Id, a.Title, a.youtubeId, b.Description, b.imageDefault As Url FROM latestsightings.dbo.videos a INNER JOIN latestsightings.dbo.youTubeVideo b ON b.Id = a.YoutubeId WHERE (a.Status = 'Published' AND a.youtubeId <> '' AND a.Title LIKE '%#TERM%' AND a.Keywords LIKE '%#Keywords%') ORDER BY a.Title DESC";
+        private const string SQL_GET_IMAGE_GALLERY_LATEST = "SELECT TOP (@quantity) i.id, i.sixFiftyBYsixFifty, i.title, i.area, c.firstname, c.lastname from latestsightings.dbo.images i INNER JOIN latestsightings.dbo.people c ON i.contributor = c.ID  WHERE (i.display = 1) ORDER BY dateAdded DESC";
+        private const string SQL_GET_VIDEO_FEATURED = "SELECT b.Id, b.Title, b.youtubeId, a.Sorting, c.Description, c.imageDefault As Url , c.imageHigh as Url2 , c.imageMedium as Url3 FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.videos b ON b.Id = a.Id INNER JOIN latestsightings.dbo.youTubeVideo c ON c.Id = b.YouTubeId WHERE (a.Type = 'video') ORDER BY a.Sorting;";
         private const string SQL_GET_VIDEO_FEATURED_COUNT = "SELECT COUNT(Id) FROM latestsightings.dbo.featuredItems WHERE (type = 'video');";
         private const string SQL_GET_VIDEO_FEATURED_ID = "SELECT COUNT(Id) FROM latestsightings.dbo.featuredItems WHERE (type = 'video' AND id = @id);";
         private const string SQL_GET_CATEGORY_FEATURED = "SELECT b.Id, b.Name As Title, a.Sorting, '' As Description, '' As Url FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Category b ON b.Id = a.Id WHERE (a.Type = 'category') ORDER BY a.Sorting;";
-        private const string SQL_GET_ARTICLE_FEATURED = "SELECT b.Id, b.Header As Title, a.Sorting, '' As Description, b.picture As Url FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Article b ON b.Id = a.Id WHERE (a.Type = 'article') ORDER BY a.Sorting;";
+        private const string SQL_GET_ARTICLE_FEATURED = "SELECT b.Id, b.Header As Title, b.CategoryID , a.Sorting, '' As Description, b.picture As Url, b.body as ArticleBody FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Article b ON b.Id = a.Id WHERE (a.Type = 'article') ORDER BY a.Sorting;";
         private const string SQL_INSERT_FEATURED_VIDEO_REPLACE = "DELETE FROM latestsightings.dbo.featuredItems WHERE (type = 'video' AND sorting = @sorting); INSERT INTO latestsightings.dbo.featuredItems (type, id, sorting) VALUES ('video', @id, @sorting);";
         private const string SQL_INSERT_FEATURED_VIDEO_ITEM = "INSERT INTO latestsightings.dbo.featuredItems (type, id, sorting) VALUES ('video', {0}, {1});";
         private const string SQL_INSERT_FEATURED_CATEGORY_ITEM = "INSERT INTO latestsightings.dbo.featuredItems (type, id, sorting) VALUES ('category', {0}, {1});";
@@ -53,6 +56,35 @@ namespace LatestSightingsLibrary
                 default:
                     return GetVideoGallery(0, query);
             }
+        }
+
+        public static List<GalleryItem> GetGallery(GalleryType type, string query, VideoSearchType filter)
+        {
+            if (type == GalleryType.Video && filter == VideoSearchType.Title)
+            {
+                return GetVideoGallery(0, query, VideoSearchType.Title);
+            }
+            else if (type == GalleryType.Video && filter == VideoSearchType.Keywords)
+            {
+                return GetVideoGallery(0, query, VideoSearchType.Keywords);
+            }
+            else
+            {
+                List<GalleryItem> empty = new List<GalleryItem>();
+                return empty;
+            }
+        }
+
+        public static List<GalleryItem> GetGallery(GalleryType type, string query, string query2)
+        {
+            switch (type)
+            {
+                case GalleryType.Video:
+                    return GetVideoGallery(query, query2);
+            }
+
+            List<GalleryItem> empty = new List<GalleryItem>();
+            return empty;
         }
 
         public static List<GalleryItem> GetGallery(GalleryType type, string query, string[] keywords)
@@ -160,6 +192,43 @@ namespace LatestSightingsLibrary
         private static List<GalleryItem> GetImageGallery(int quantity, string query)
         {
             List<GalleryItem> items = null;
+            // "SELECT TOP @quantity sixFiftyBYsixFifty, title 
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.Connection = conn;
+                sqlQuery.CommandText = SQL_GET_IMAGE_GALLERY_LATEST;
+                sqlQuery.Parameters.Add("quantity", System.Data.SqlDbType.Int).Value = quantity;
+
+                SqlDataReader rdr = sqlQuery.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    items = new List<GalleryItem>();
+                    while (rdr.Read())
+                    {
+                        GalleryItem item = new GalleryItem();
+                        item.Id = rdr["id"].ToString();
+                        item.Title = rdr["title"].ToString();
+                        item.Url = rdr["sixFiftyBYsixFifty"].ToString();
+                        item.Firstname = rdr["firstname"].ToString();
+                        item.Lastname = rdr["lastname"].ToString();
+                        item.Location = rdr["area"].ToString();
+                        items.Add(item);
+                    }
+                }
+                rdr.Close();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                ExHandler.RecordError(ex);
+            }
+            finally
+            {
+                conn.Dispose();
+            }
 
             return items;
         }
@@ -181,6 +250,7 @@ namespace LatestSightingsLibrary
                 else
                 {
                     sqlQuery.CommandText = SQL_GET_VIDEO_GALLERY_LATEST;
+                    sqlQuery.Parameters.Add("quantity", System.Data.SqlDbType.Int).Value = quantity;
                 }
                 SqlDataReader rdr = sqlQuery.ExecuteReader();
                 if (rdr.HasRows)
@@ -193,6 +263,106 @@ namespace LatestSightingsLibrary
                         item.Description = rdr["description"].ToString();
                         item.Title = rdr["title"].ToString();
                         item.Url = rdr["url"].ToString();
+                        item.Url2 = rdr["url2"].ToString();
+                        item.Url3 = rdr["url3"].ToString();
+                        item.YouTubeId = rdr["youtubeId"].ToString();
+                        items.Add(item);
+                    }
+                }
+                rdr.Close();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                ExHandler.RecordError(ex);
+            }
+            finally
+            {
+                conn.Dispose();
+            }
+
+            return items;
+        }
+
+        private static List<GalleryItem> GetVideoGallery(int quantity, string query, VideoSearchType type)
+        {
+            List<GalleryItem> items = null;
+
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.Connection = conn;
+                if (!String.IsNullOrEmpty(query) && type == VideoSearchType.Title)
+                {
+                    sqlQuery.CommandText = SQL_GET_VIDEO_GALLERY_SEARCH.Replace("#TERM", query.Replace("'", ""));
+                }
+                else if (!String.IsNullOrEmpty(query) && type == VideoSearchType.Keywords)
+                {
+                    sqlQuery.CommandText = SQL_GET_VIDEO_GALLERY_WITH_ONLY_KEYWORDS_SEARCH.Replace("#Keywords", query.Replace("'", ""));
+                }
+                else
+                {
+                    sqlQuery.CommandText = SQL_GET_VIDEO_GALLERY_LATEST;
+                    sqlQuery.Parameters.Add("quantity", System.Data.SqlDbType.Int).Value = quantity;
+                }
+                SqlDataReader rdr = sqlQuery.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    items = new List<GalleryItem>();
+                    while (rdr.Read())
+                    {
+                        GalleryItem item = new GalleryItem();
+                        item.Id = rdr["id"].ToString();
+                        item.Description = rdr["description"].ToString();
+                        item.Title = rdr["title"].ToString();
+                        item.Url = rdr["url"].ToString();
+                        item.YouTubeId = rdr["youtubeId"].ToString();
+                        items.Add(item);
+                    }
+                }
+                rdr.Close();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                ExHandler.RecordError(ex);
+            }
+            finally
+            {
+                conn.Dispose();
+            }
+
+            return items;
+        }
+
+        private static List<GalleryItem> GetVideoGallery(string title, string keywords)
+        {
+            List<GalleryItem> items = null;
+
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.Connection = conn;
+                if (!String.IsNullOrEmpty(title) && !String.IsNullOrEmpty(keywords))
+                {
+                    sqlQuery.CommandText = SQL_GET_VIDEO_GALLERY_WITH_TITLE_AND_KEYWORDS_SEARCH.Replace("#TERM", title.Replace("'", "")).Replace("#Keywords", keywords.Replace("'",""));
+                }
+                SqlDataReader rdr = sqlQuery.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    items = new List<GalleryItem>();
+                    while (rdr.Read())
+                    {
+                        GalleryItem item = new GalleryItem();
+                        item.Id = rdr["id"].ToString();
+                        item.Description = rdr["description"].ToString();
+                        item.Title = rdr["title"].ToString();
+                        item.Url = rdr["url"].ToString();
+                        item.YouTubeId = rdr["youtubeId"].ToString();
                         items.Add(item);
                     }
                 }
@@ -294,7 +464,10 @@ namespace LatestSightingsLibrary
                         item.Description = rdr["description"].ToString();
                         item.Title = rdr["title"].ToString();
                         item.Url = rdr["url"].ToString();
+                        item.Url2 = rdr["url2"].ToString();
+                        item.Url3 = rdr["url3"].ToString();
                         item.Order = Convert.ToInt32(rdr["Sorting"]);
+                        item.YouTubeId = rdr["youtubeId"].ToString();
                         items.Add(item);
                     }
                 }
@@ -377,6 +550,8 @@ namespace LatestSightingsLibrary
                         item.Title = rdr["title"].ToString();
                         item.Url = rdr["url"].ToString();
                         item.Order = Convert.ToInt32(rdr["Sorting"]);
+                        item.ArticleBody = rdr["ArticleBody"].ToString();
+                        item.CateogryId = rdr["CategoryID"].ToString(); ;
                         items.Add(item);
                     }
                 }
@@ -632,8 +807,16 @@ namespace LatestSightingsLibrary
         public string Title { get; set; }
         public string Description { get; set; }
         public string Url { get; set; }
+        public string Url2 { get; set; }
+        public string Url3 { get; set; }
         public string Keywords { get; set; }
         public int Order { get; set; }
         public bool MatchesSearch { get; set; }
+        public string YouTubeId { get; set; }
+        public string ArticleBody { get; set; }
+        public string CateogryId { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public string Location { get; set; }
     }
 }

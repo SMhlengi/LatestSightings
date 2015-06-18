@@ -11,7 +11,7 @@
 	        selector: "textarea",
 	        height: 380,
 	        auto_focus: "articlebody",
-	        plugins: "wordcount",
+	        plugins: ["wordcount", "link"]
 	    });
 	</script>
     <script>

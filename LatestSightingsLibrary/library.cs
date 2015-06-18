@@ -67,7 +67,7 @@ namespace LatestSightingsLibrary
             List<Dictionary<string,string>> articles = new List<Dictionary<string,string>>();
             string format = "MMM d HH:mm yyyy"; // <!-- output example Feb 27 11:41 2009
 
-            query.CommandText = "Select * from [dbo].[Article] where [Article].CategoryID = " + id;
+            query.CommandText = "Select * from [dbo].[Article] where [Article].CategoryID = " + id + " ORDER BY DateCreated DESC";
             conn.Open();
             data = query.ExecuteReader();
             if (data.HasRows)
@@ -82,6 +82,41 @@ namespace LatestSightingsLibrary
                         {"dateCreated", Convert.ToDateTime(data["DateCreated"]).ToString(format)},
                         {"body", data["body"].ToString()},
                         {"id", data["id"].ToString()}
+                    };
+                    articles.Add(article);
+                }
+            }
+            conn.Close();
+            data.Close();
+            return articles;
+        }
+
+        public static List<Dictionary<string, string>> GetArticlesBasedOnCategoryId(int id)
+        {
+            SqlConnection conn = library.Conn();
+            conn.Open();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+            List<Dictionary<string, string>> articles = new List<Dictionary<string, string>>();
+            string format = "MMM d HH:mm yyyy"; // <!-- output example Feb 27 11:41 2009
+
+            query.CommandText = "Select * from [dbo].[Article] where [Article].CategoryID = " + id + " AND Complete = 1 ORDER BY DateCreated DESC";
+            SqlDataReader data = query.ExecuteReader();
+            if (data.HasRows)
+            {
+                while (data.Read())
+                {
+                    Dictionary<string, string> article = new Dictionary<string, string>()
+                    {
+                        {"header", data["Header"].ToString()},
+                        {"draft", data["draft"].ToString()},
+                        {"complete", data["complete"].ToString()},
+                        {"dateCreated", Convert.ToDateTime(data["DateCreated"]).ToString(format)},
+                        {"body", data["body"].ToString()},
+                        {"id", data["id"].ToString()},
+                        {"picture",  data["Picture"].ToString()},
+                        {"categoryId",  data["CategoryID"].ToString()},
+                        {"url",  data["url"].ToString()}
                     };
                     articles.Add(article);
                 }
@@ -113,6 +148,40 @@ namespace LatestSightingsLibrary
                         {"id", data["id"].ToString()}
                     };
                     articles.Add(article);
+                }
+            }
+            conn.Close();
+            data.Close();
+            return articles;
+        }
+
+        public static List<Dictionary<string, string>> GetLatestCompletedArticles(int quantity)
+        {
+            SqlConnection conn = library.Conn();
+            conn.Open();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+            query.CommandText = "Select TOP " + quantity.ToString() + " * from [dbo].[Article] WHERE Complete = 1 ORDER BY DateCreated DESC";
+
+            List<Dictionary<string, string>> articles = new List<Dictionary<string, string>>();
+            string format = "MMM d HH:mm yyyy"; // <!-- output example Feb 27 11:41 2009
+            
+            SqlDataReader data = query.ExecuteReader();
+            if (data.HasRows)
+            {
+                while (data.Read())
+                {
+                    if ((!data["Header"].ToString().ToLower().Contains("terms")) && (!data["Header"].ToString().ToLower().Contains("policy")))
+                    {
+                        Dictionary<string, string> article = new Dictionary<string, string>()
+                        {
+                            {"header", data["Header"].ToString()},
+                            {"picture", data["Picture"].ToString()},
+                            {"id", data["id"].ToString()},
+                            {"categoryid", data["categoryid"].ToString()},
+                        };
+                        articles.Add(article);
+                    }
                 }
             }
             conn.Close();
@@ -161,6 +230,84 @@ namespace LatestSightingsLibrary
                     article.Add("picture", data["Picture"].ToString());
                     article.Add("draft", data["Draft"].ToString());
                     article.Add("complete", data["Complete"].ToString());
+                }
+            }
+            else
+            {
+                article.Add("articleFound", "0");
+            }
+            data.Close();
+            conn.Close();
+            return article;
+        }
+
+        public static Dictionary<string, string> GetArticle(int id)
+        {
+            SqlConnection conn = library.Conn();
+            conn.Open();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+
+            query.CommandText = "Select * from [dbo].[Article] where id = " + id;
+            SqlDataReader data = query.ExecuteReader();
+            Dictionary<string, string> article = new Dictionary<string, string>();
+            string format = "MMM d yyyy"; // <!-- output example Feb 27 11:41 2009
+
+            if (data.HasRows)
+            {
+                article.Add("articleFound", "1");
+                while (data.Read())
+                {
+                    article.Add("categoryId", data["CategoryID"].ToString());
+                    article.Add("header", data["header"].ToString());
+                    article.Add("body", data["Body"].ToString());
+                    article.Add("picture", data["Picture"].ToString());
+                    article.Add("draft", data["Draft"].ToString());
+                    article.Add("complete", data["Complete"].ToString());
+                    article.Add("dateCreated", Convert.ToDateTime(data["DateCreated"]).ToString(format));
+                }
+            }
+            else
+            {
+                article.Add("articleFound", "0");
+            }
+            data.Close();
+            conn.Close();
+            return article;
+        }
+        
+        public static SqlConnection Conn()
+        {
+            SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString);
+
+            return conn;
+        }
+
+
+        public static Dictionary<string, string> GetArticle(string url)
+        {
+            SqlConnection conn = library.Conn();
+            conn.Open();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+
+            query.CommandText = "Select TOP 1 * from [dbo].[Article] where url = " + url;
+            SqlDataReader data = query.ExecuteReader();
+            Dictionary<string, string> article = new Dictionary<string, string>();
+            string format = "MMM d yyyy"; // <!-- output example Feb 27 11:41 2009
+
+            if (data.HasRows)
+            {
+                article.Add("articleFound", "1");
+                while (data.Read())
+                {
+                    article.Add("categoryId", data["CategoryID"].ToString());
+                    article.Add("header", data["header"].ToString());
+                    article.Add("body", data["Body"].ToString());
+                    article.Add("picture", data["Picture"].ToString());
+                    article.Add("draft", data["Draft"].ToString());
+                    article.Add("complete", data["Complete"].ToString());
+                    article.Add("dateCreated", Convert.ToDateTime(data["DateCreated"]).ToString(format));
                 }
             }
             else

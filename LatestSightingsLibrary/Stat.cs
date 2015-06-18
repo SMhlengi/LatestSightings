@@ -23,6 +23,7 @@ namespace LatestSightingsLibrary
         public string Stat3 { get; set; }
         public string Stat4 { get; set; }
         public string Stat5 { get; set; }
+        public string con_firstCharacterOfSurname { get; set; }
         public DateTime RunDateTime { get; set; }
 
         private const string SQL_DELETE_STATS = "DELETE FROM latestsightings.dbo.stats WHERE (year = @year AND month = @month AND day = @day AND type = @type);";
@@ -31,7 +32,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_STATS_WITHDAY = "SELECT * FROM latestsightings.dbo.stats WHERE (Year = @year AND Month = @month AND day = @day AND type = @type) ORDER BY Ordering";
         private const string SQL_GET_STATS_BYVIDEO = "SELECT a.*, b.Title FROM latestsightings.dbo.stats a INNER JOIN latestsightings.dbo.videos b ON b.youTubeId = a.videoId WHERE (a.Year = @year AND a.Month = @month AND a.type = @type) ORDER BY a.Ordering";
         private const string SQL_GET_STATS_WITHDAY_BYVIDEO = "SELECT a.*, b.Title FROM latestsightings.dbo.stats a INNER JOIN latestsightings.dbo.videos b ON b.youTubeId = a.videoId WHERE (a.Year = @year AND a.Month = @month AND a.day = @day AND a.type = @type) ORDER BY a.Ordering";
-        private const string SQL_GET_VIEWS_BYCONTRIBUTOR = "SELECT TOP 10 c.Id, c.firstname, c.lastname, SUM (a.Views) AS TotalViews FROM [latestsightings].[dbo].[videosAnalytics] a INNER JOIN [latestsightings].[dbo].[videos] b ON b.youtubeId = a.videoId INNER JOIN [latestsightings].[dbo].[people] c ON c.id = b.contributor WHERE (a.year = @year AND a.month = @month AND a.views > 0) GROUP BY c.Id, c.firstname, c.lastname ORDER BY TotalViews DESC";
+        private const string SQL_GET_VIEWS_BYCONTRIBUTOR = "SELECT TOP 10 c.Id, c.firstname, c.lastname, SUM (a.Views) AS TotalViews FROM [latestsightings].[dbo].[videosAnalytics] a INNER JOIN [latestsightings].[dbo].[videos] b ON b.youtubeId = a.videoId INNER JOIN [latestsightings].[dbo].[people] c ON c.id = b.contributor WHERE (a.year = @year AND a.month = @month AND a.views > 0 AND c.email != 'nadav.ossendryver@gmail.com') GROUP BY c.Id, c.firstname, c.lastname ORDER BY TotalViews DESC";
 
         public static void SaveStats(List<Stat> stats)
         {
@@ -270,6 +271,7 @@ namespace LatestSightingsLibrary
                         stat.Stat1 = rdr["Id"].ToString();
                         stat.Stat2 = rdr["firstname"].ToString();
                         stat.Stat3 = rdr["lastname"].ToString();
+                        stat.con_firstCharacterOfSurname = (rdr["lastname"].ToString().Length > 0) ? rdr["lastname"].ToString().Substring(0,1) : "";
                         stat.Stat4 = rdr["TotalViews"].ToString();
                         stat.Stat5 = "";
                         stat.Type = Top10Types.Views;
