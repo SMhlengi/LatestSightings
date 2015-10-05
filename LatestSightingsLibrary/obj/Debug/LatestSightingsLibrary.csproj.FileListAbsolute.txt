@@ -3,3 +3,12 @@ C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSighti
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.dll
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.pdb
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.csprojResolveAssemblyReference.cache
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\LatestSightingsLibrary\bin\Debug\LatestSightingsLibrary.dll
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\LatestSightingsLibrary\bin\Debug\LatestSightingsLibrary.pdb
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.dll
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.pdb
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsLibrary\bin\Debug\LatestSightingsLibrary.dll
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsLibrary\bin\Debug\LatestSightingsLibrary.pdb
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.csprojResolveAssemblyReference.cache
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.dll
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsLibrary\obj\Debug\LatestSightingsLibrary.pdb

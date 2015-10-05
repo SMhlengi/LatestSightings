@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="GalleryData.aspx.cs" Inherits="LatestSightings.GalleryData" %>

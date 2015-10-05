@@ -60,3 +60,13 @@ C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSighti
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.application
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.exe
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.pdb
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.csproj.App.config
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.csprojResolveAssemblyReference.cache
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.ProjectInstaller.resources
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.csproj.GenerateResource.Cache
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.csproj.App.config
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.csprojResolveAssemblyReference.cache
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.ProjectInstaller.resources
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.csproj.GenerateResource.Cache
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.exe
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\LatestSightingsService\obj\Debug\LatestSightingsService.pdb

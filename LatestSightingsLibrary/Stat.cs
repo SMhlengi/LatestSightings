@@ -24,6 +24,7 @@ namespace LatestSightingsLibrary
         public string Stat4 { get; set; }
         public string Stat5 { get; set; }
         public string con_firstCharacterOfSurname { get; set; }
+        public YouTubeVideo youtubeVideo { get; set; }
         public DateTime RunDateTime { get; set; }
 
         private const string SQL_DELETE_STATS = "DELETE FROM latestsightings.dbo.stats WHERE (year = @year AND month = @month AND day = @day AND type = @type);";
@@ -31,6 +32,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_STATS = "SELECT * FROM latestsightings.dbo.stats WHERE (Year = @year AND Month = @month AND type = @type) ORDER BY Ordering";
         private const string SQL_GET_STATS_WITHDAY = "SELECT * FROM latestsightings.dbo.stats WHERE (Year = @year AND Month = @month AND day = @day AND type = @type) ORDER BY Ordering";
         private const string SQL_GET_STATS_BYVIDEO = "SELECT a.*, b.Title FROM latestsightings.dbo.stats a INNER JOIN latestsightings.dbo.videos b ON b.youTubeId = a.videoId WHERE (a.Year = @year AND a.Month = @month AND a.type = @type) ORDER BY a.Ordering";
+        private const string SQL_GET_STATS_BYVIDEO_WITHDETAILS = "SELECT TOP 10 a.*, b.Title, c.imageDefault, c.imageHigh, c.imageMax, c.imageMedium, c.imageStandard, d.firstname, d.lastname FROM latestsightings.dbo.videosAnalytics a INNER JOIN latestsightings.dbo.videos b ON b.youTubeId = a.videoId INNER JOIN latestsightings.dbo.youTubeVideo c ON c.id = a.videoId INNER JOIN latestsightings.dbo.people d ON d.id = b.contributor WHERE (a.Year = @year AND a.Month = @month) ORDER BY a.youtubeEarnings DESC";
         private const string SQL_GET_STATS_WITHDAY_BYVIDEO = "SELECT a.*, b.Title FROM latestsightings.dbo.stats a INNER JOIN latestsightings.dbo.videos b ON b.youTubeId = a.videoId WHERE (a.Year = @year AND a.Month = @month AND a.day = @day AND a.type = @type) ORDER BY a.Ordering";
         private const string SQL_GET_VIEWS_BYCONTRIBUTOR = "SELECT TOP 10 c.Id, c.firstname, c.lastname, SUM (a.Views) AS TotalViews FROM [latestsightings].[dbo].[videosAnalytics] a INNER JOIN [latestsightings].[dbo].[videos] b ON b.youtubeId = a.videoId INNER JOIN [latestsightings].[dbo].[people] c ON c.id = b.contributor WHERE (a.year = @year AND a.month = @month AND a.views > 0 AND c.email != 'nadav.ossendryver@gmail.com') GROUP BY c.Id, c.firstname, c.lastname ORDER BY TotalViews DESC";
 
@@ -279,6 +281,65 @@ namespace LatestSightingsLibrary
                         stat.VideoTitle = "";
 
                         stats.Add(stat);
+                        count++;
+                    }
+                }
+                rdr.Close();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                ExHandler.RecordError(ex);
+            }
+
+            return stats;
+        }
+
+        public static List<Stat> GetTopEarningVideos()
+        {
+            List<Stat> stats = null;
+
+            Dictionary<int, int> paymentDate = Payment.GetAnyLastPaidDate();
+
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.Connection = conn;
+                sqlQuery.CommandText = SQL_GET_STATS_BYVIDEO_WITHDETAILS;
+                sqlQuery.Parameters.Add("year", System.Data.SqlDbType.Int).Value = paymentDate.First().Key;
+                sqlQuery.Parameters.Add("month", System.Data.SqlDbType.Int).Value = paymentDate.First().Value;
+                SqlDataReader rdr = sqlQuery.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    stats = new List<Stat>();
+                    int count = 1;
+                    while (rdr.Read())
+                    {
+                        Stat stat = new Stat();
+
+                        stat.Day = Convert.ToInt32(0);
+                        stat.Month = paymentDate.First().Key;
+                        stat.Year = paymentDate.First().Value;
+                        stat.Ordering = count;
+                        stat.Position = count;
+                        stat.Stat1 = rdr["youtubeEarnings"].ToString();
+                        stat.Type = Top10Types.Earnings;
+                        stat.VideoId = rdr["videoId"].ToString();
+                        stat.VideoTitle = rdr["title"].ToString();
+
+                        stat.youtubeVideo = new YouTubeVideo();
+                        stat.youtubeVideo.ImageDefault = rdr["imageDefault"].ToString();
+                        stat.youtubeVideo.ImageHigh = rdr["imageHigh"].ToString();
+                        stat.youtubeVideo.ImageMax = rdr["imageMax"].ToString();
+                        stat.youtubeVideo.ImageMedium = rdr["imageMedium"].ToString();
+                        stat.youtubeVideo.ImageStandard = rdr["imageStandard"].ToString();
+                        stat.youtubeVideo.Firstname = rdr["firstname"].ToString();
+                        stat.youtubeVideo.Lastname = rdr["lastname"].ToString();
+
+                        stats.Add(stat);
+
                         count++;
                     }
                 }

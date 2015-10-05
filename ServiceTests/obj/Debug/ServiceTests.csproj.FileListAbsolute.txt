@@ -56,3 +56,7 @@ C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\ServiceTests
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\ServiceTests\obj\Debug\ServiceTests.csprojResolveAssemblyReference.cache
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\ServiceTests\obj\Debug\ServiceTests.dll
 C:\Users\work\Documents\Visual Studio 2012\Projects\LatestSightings\ServiceTests\obj\Debug\ServiceTests.pdb
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\ServiceTests\obj\Debug\ServiceTests.csproj.App.config
+C:\Users\musa.mhlengi\Documents\GitHub\LatestSightings\ServiceTests\obj\Debug\ServiceTests.csprojResolveAssemblyReference.cache
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\ServiceTests\obj\Debug\ServiceTests.csproj.App.config
+C:\Users\musa.mhlengi\Desktop\old_desktop\Documents\GitHub\LatestSightings\ServiceTests\obj\Debug\ServiceTests.csprojResolveAssemblyReference.cache

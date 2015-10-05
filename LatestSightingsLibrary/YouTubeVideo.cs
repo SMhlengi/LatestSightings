@@ -19,6 +19,8 @@ namespace LatestSightingsLibrary
         public string ImageStandard { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
 
         private const string SQL_GET_VIDEO_BYID = "SELECT * FROM latestsightings.dbo.youTubeVideo WHERE (id = @id);";
         private const string SQL_CHECK_VIDEO_BYID = "SELECT COUNT(Id) FROM latestsightings.dbo.youTubeVideo WHERE (id = @id);";
