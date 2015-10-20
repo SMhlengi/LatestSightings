@@ -22,6 +22,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_ARTICLES_BASED_ON_SEARCH_STRING = "SELECT * FROM Article WHERE Header LIKE '%#searchString#%' and Complete = 1;";
         private const string SQL_GET_VIDEO = "SELECT youtubeId FROM VIDEOS WHERE TITLE LIKE '%#searchString#%' and status = 'Published'";
         private const string SQL_GET_IMAGE = "SELECT * FROM IMAGES WHERE tags LIKE'%#searchTag#%' and display = 1;";
+        private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
         {
@@ -650,6 +651,36 @@ namespace LatestSightingsLibrary
             }
 
             return images;
+        }
+
+        public static Dictionary<string, string> GetTingInfo(string id)
+        {
+            SqlConnection conn = library.Conn();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+            Dictionary<string, string> ting = null;
+            query.Parameters.Add("@tingid", System.Data.SqlDbType.VarChar).Value = id;
+            conn.Open();
+            SqlDataReader data = query.ExecuteReader();
+            if (data.HasRows)
+            {
+                while(data.Read())
+                {
+                    ting = new Dictionary<string, string>()
+                    {
+                        {"time", ConvertToDateTimeFormat(data["time"].ToString())},
+                        {"title", data["title"].ToString()},
+                        {"visibility", data["visibility"].ToString()},
+                        {"traffic", data["traffic"].ToString()},
+                        {"location", data["situation"].ToString()},
+                        {"description", data["description"].ToString()},
+                        {"longitude", data["longitude"].ToString()},
+                        {"latitude", data["latitude"].ToString()},
+                        {"animalid", data["animal"].ToString()}
+                    };
+                }
+            }
+            return ting; 
         }
     }
 }
