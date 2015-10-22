@@ -23,6 +23,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_VIDEO = "SELECT youtubeId FROM VIDEOS WHERE TITLE LIKE '%#searchString#%' and status = 'Published'";
         private const string SQL_GET_IMAGE = "SELECT * FROM IMAGES WHERE tags LIKE'%#searchTag#%' and display = 1;";
         private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
+        private const string SQL_GET_PARKS = "SELECT id, name FROM parks WHERE (active = 1)";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
         {
@@ -659,6 +660,7 @@ namespace LatestSightingsLibrary
             SqlCommand query = new SqlCommand();
             query.Connection = conn;
             Dictionary<string, string> ting = null;
+            query.CommandText = SQL_GET_TING_INFO;
             query.Parameters.Add("@tingid", System.Data.SqlDbType.VarChar).Value = id;
             conn.Open();
             SqlDataReader data = query.ExecuteReader();
@@ -680,7 +682,36 @@ namespace LatestSightingsLibrary
                     };
                 }
             }
+            conn.Close();
+            data.Close();
             return ting; 
+        }
+
+        public static List<Dictionary<string, string>> GetParks()
+        {
+            SqlConnection conn = library.Conn();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+            Dictionary<string, string> park = null;
+            List<Dictionary<string, string>> parks = new List<Dictionary<string, string>>();
+            query.CommandText = SQL_GET_PARKS;
+            conn.Open();
+            SqlDataReader data = query.ExecuteReader();
+            if (data.HasRows)
+            {
+                while (data.Read())
+                {
+                    park = new Dictionary<string, string>()
+                    {
+                        {"id", data["id"].ToString()},
+                        {"name", data["name"].ToString()}
+                    };
+                    parks.Add(park);
+                }
+            }
+            conn.Close();
+            data.Close();
+            return parks;
         }
     }
 }
