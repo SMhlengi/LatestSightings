@@ -24,6 +24,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_IMAGE = "SELECT * FROM IMAGES WHERE tags LIKE'%#searchTag#%' and display = 1;";
         private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
         private const string SQL_GET_PARKS = "SELECT id, name FROM parks WHERE (active = 1)";
+        private const string SQL_GET_KRUGER_TINGS = "SELECT top 15 * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
         {
@@ -678,7 +679,10 @@ namespace LatestSightingsLibrary
                         {"description", data["description"].ToString()},
                         {"longitude", data["longitude"].ToString()},
                         {"latitude", data["latitude"].ToString()},
-                        {"animalid", data["animal"].ToString()}
+                        {"animalid", data["animal"].ToString()},
+                        {"lodgeId", data["lodgeId"].ToString()},
+                        {"tingUser", GetTingerUserName(data["userId"].ToString())},
+                        {"tingid", data["id"].ToString()}
                     };
                 }
             }
@@ -712,6 +716,51 @@ namespace LatestSightingsLibrary
             conn.Close();
             data.Close();
             return parks;
+        }
+
+        public static List<Dictionary<string, string>> GetParkTingsByDate(Guid parkid)
+        {
+            SqlConnection conn = library.Conn();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+            query.CommandText = SQL_GET_KRUGER_TINGS;
+            query.Parameters.Add("@pid", System.Data.SqlDbType.VarChar).Value = parkid.ToString();
+            conn.Open();
+            SqlDataReader data = query.ExecuteReader();
+
+            List<Dictionary<string, string>> tings = new List<Dictionary<string, string>>();
+            Dictionary<string, string> tingers;
+
+            if (data.HasRows)
+            {
+                while (data.Read())
+                {
+                    tingers = new Dictionary<string, string>();
+                    tingers.Add("id", data["id"].ToString());
+                    tingers.Add("userid", data["userId"].ToString());
+                    tingers.Add("time", ConvertToDateTimeFormat(data["time"].ToString()));
+                    tingers.Add("title", data["title"].ToString());
+                    tingers.Add("visibility", data["visibility"].ToString());
+                    tingers.Add("traffic", data["traffic"].ToString());
+                    tingers.Add("location", data["situation"].ToString());
+                    tingers.Add("description", data["description"].ToString());
+                    tingers.Add("longitude", data["longitude"].ToString());
+                    tingers.Add("latitude", data["latitude"].ToString());
+                    tingers.Add("animalid", data["animal"].ToString());
+                    tings.Add(tingers);
+                }
+            }
+
+            conn.Close();
+            data.Close();
+            if (tings.Count > 0)
+            {
+                foreach (var ting in tings)
+                {
+                    ting.Add("username", GetTingerUserName(ting["userid"]));
+                }
+            }
+            return tings;
         }
     }
 }
