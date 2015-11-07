@@ -22,6 +22,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_DAYS = "SELECT * FROM latestsightings.dbo.videoAnalyticsByDay WHERE (year = @year AND month = @month AND videoId = 'All Videos') ORDER BY Day;";
         private const string SQL_GET_DAYS_BYVIDEO = "SELECT * FROM latestsightings.dbo.videoAnalyticsByDay WHERE (year = @year AND month = @month AND videoId = @videoId) ORDER BY Day;";
         private const string SQL_GET_CONTRIBUTOR_EARNINGS = "SELECT a.year, a.month, a.day, SUM(a.views) AS Views, SUM(a.earnings) AS Earnings FROM [latestsightings].[dbo].[videoAnalyticsByDay] a INNER JOIN [latestsightings].[dbo].[videos] b ON b.youtubeId = a.videoId WHERE (b.contributor = @contributor) AND a.year = @year AND a.month = @month GROUP BY a.year, a.month, a.day ORDER BY a.year, a.month, a.day";
+        private const string SQL_GET_CONTRIBUTOR_EARNINGS_WITH_SHARE = "SELECT a.year, a.month, a.day, a.videoId, a.views AS Views, a.earnings AS Earnings, b.revenueShare FROM [latestsightings].[dbo].[videoAnalyticsByDay] a INNER JOIN [latestsightings].[dbo].[videos] b ON b.youtubeId = a.videoId WHERE (b.contributor = @contributor) AND a.year = @year AND a.month = @month ORDER BY a.videoId, a.year, a.month, a.day";
 
         public static void SaveDays(List<YouTubeVideoAnalytic> days)
         {
@@ -226,6 +227,65 @@ namespace LatestSightingsLibrary
                         day.Year = Convert.ToInt32(rdr["year"]);
                         day.EstimatedEarning = Convert.ToDecimal(rdr["earnings"]);
                         day.Views = Convert.ToInt64(rdr["views"]);
+                        days.Add(day);
+                    }
+                }
+                rdr.Close();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return days;
+        }
+
+        public static List<YouTubeVideoAnalytic> GetVideoTotalsByContributorWithShare(int year, int month, string contentOwner)
+        {
+            List<YouTubeVideoAnalytic> days = new List<YouTubeVideoAnalytic>();
+
+            SqlConnection conn = data.Conn();
+            try
+            {
+                conn.Open();
+                SqlCommand sqlQuery = new SqlCommand();
+                sqlQuery.Connection = conn;
+                sqlQuery.CommandText = SQL_GET_CONTRIBUTOR_EARNINGS_WITH_SHARE;
+                sqlQuery.Parameters.Add("year", System.Data.SqlDbType.Int).Value = year;
+                sqlQuery.Parameters.Add("month", System.Data.SqlDbType.Int).Value = month;
+                sqlQuery.Parameters.Add("contributor", System.Data.SqlDbType.VarChar).Value = contentOwner;
+                SqlDataReader rdr = sqlQuery.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    days = new List<YouTubeVideoAnalytic>();
+                    while (rdr.Read())
+                    {
+                        YouTubeVideoAnalytic[] tempDays = new YouTubeVideoAnalytic[days.Count];
+                        days.CopyTo(tempDays);
+                        int curDay = Convert.ToInt32(rdr["day"]);
+                        YouTubeVideoAnalytic day = tempDays.FirstOrDefault(x => { return x.Day == curDay; });
+                        if (day == null)
+                        {
+                            day = new YouTubeVideoAnalytic();
+                            day.Day = Convert.ToInt32(rdr["day"]);
+                            day.Month = Convert.ToInt32(rdr["month"]);
+                            day.Year = Convert.ToInt32(rdr["year"]);
+                            day.EstimatedEarning = 0;
+                            day.Views = 0;
+                        }
+
+                        if (Convert.ToDecimal(rdr["earnings"]) > 0)
+                        {
+                            day.EstimatedEarning += Financial.ApplyRevenueShare(Convert.ToDecimal(rdr["earnings"]), rdr["revenueShare"].ToString());
+                        }
+                        day.Views += Convert.ToInt64(rdr["views"]);
+
+                        days.RemoveAll(x => x.Day == curDay);
                         days.Add(day);
                     }
                 }
