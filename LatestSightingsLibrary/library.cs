@@ -18,13 +18,13 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_LODGE_TINGS = "SELECT * FROM tings WHERE (lodgeId = @lodgeid AND animal IS NOT NULL) ORDER BY time DESC";
         private const string SQL_GET_LODGE_TINGS_BY_DATE = "SELECT * FROM tings WHERE (lodgeId = @lodgeid AND animal IS NOT NULL AND (CAST(time AS date) = @currentDate)) ORDER BY time DESC";
         private const string SQL_GET_TOP_LODGE_TINGS = "SELECT TOP (@tingnumber) id FROM tings ORDER BY time DESC";
-        private const string SQL_GET_TOP_Ngwenya_LODGE_TINGS = "SELECT TOP (@tingnumber) id, time, title FROM tings where lodgeId = '43fce68a-488c-49bf-9060-c48b9c68d601' ORDER BY time DESC";
+        private const string SQL_GET_TOP_TINGS = "SELECT top (@tingnumber) id, title, time FROM tings WHERE animal IS NOT NULL ORDER BY time DESC";
         private const string SQL_GET_ARTICLES_BASED_ON_SEARCH_STRING = "SELECT * FROM Article WHERE Header LIKE '%#searchString#%' and Complete = 1;";
         private const string SQL_GET_VIDEO = "SELECT youtubeId FROM VIDEOS WHERE TITLE LIKE '%#searchString#%' and status = 'Published'";
         private const string SQL_GET_IMAGE = "SELECT * FROM IMAGES WHERE tags LIKE'%#searchTag#%' and display = 1;";
         private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
         private const string SQL_GET_PARKS = "SELECT id, name FROM parks WHERE (active = 1)";
-        private const string SQL_GET_KRUGER_TINGS = "SELECT top 15 * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
+        private const string SQL_GET_KRUGER_TINGS = "SELECT top 25 * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
         {
@@ -109,7 +109,7 @@ namespace LatestSightingsLibrary
             return articles;
         }
 
-        public static List<Dictionary<string, string>> GetArticlesBasedOnCategoryId(int id)
+        public static List<Dictionary<string, string>> GetArticlesBasedOnCategoryId(int id, Boolean allAritcles = false)
         {
             SqlConnection conn = library.Conn();
             conn.Open();
@@ -118,7 +118,11 @@ namespace LatestSightingsLibrary
             List<Dictionary<string, string>> articles = new List<Dictionary<string, string>>();
             string format = "MMM d HH:mm yyyy"; // <!-- output example Feb 27 11:41 2009
 
-            query.CommandText = "Select * from [dbo].[Article] where [Article].CategoryID = " + id + " AND Complete = 1 ORDER BY DateCreated DESC";
+            if (allAritcles == true)
+                query.CommandText = "Select * from [dbo].[Article] where [Article].CategoryID = " + id + " AND Complete = 1 ORDER BY DateCreated DESC";
+            else
+                query.CommandText = "Select top 3 * from [dbo].[Article] where [Article].CategoryID = " + id + " AND Complete = 1 ORDER BY DateCreated DESC";
+
             SqlDataReader data = query.ExecuteReader();
             if (data.HasRows)
             {
@@ -552,7 +556,7 @@ namespace LatestSightingsLibrary
             SqlConnection conn = library.Conn();
             SqlCommand query = new SqlCommand();
             query.Connection = conn;
-            query.CommandText = SQL_GET_TOP_Ngwenya_LODGE_TINGS;
+            query.CommandText = SQL_GET_TOP_TINGS;
             query.Parameters.Add("@tingnumber", System.Data.SqlDbType.Int).Value = number;
             conn.Open();
             SqlDataReader data = query.ExecuteReader();
