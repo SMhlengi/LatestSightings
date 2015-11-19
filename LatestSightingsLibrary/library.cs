@@ -18,7 +18,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_LODGE_TINGS = "SELECT * FROM tings WHERE (lodgeId = @lodgeid AND animal IS NOT NULL) ORDER BY time DESC";
         private const string SQL_GET_LODGE_TINGS_BY_DATE = "SELECT * FROM tings WHERE (lodgeId = @lodgeid AND animal IS NOT NULL AND (CAST(time AS date) = @currentDate)) ORDER BY time DESC";
         private const string SQL_GET_TOP_LODGE_TINGS = "SELECT TOP (@tingnumber) id FROM tings ORDER BY time DESC";
-        private const string SQL_GET_TOP_TINGS = "SELECT top (@tingnumber) id, title, time FROM tings WHERE animal IS NOT NULL ORDER BY time DESC";
+        private const string SQL_GET_TOP_TINGS = "SELECT top (@tingnumber) a.id as id,a.title as title, a.time as time, b.name FROM tings a INNER JOIN parks b ON a.parkid = b.id WHERE a.animal IS NOT NULL ORDER BY time DESC";
         private const string SQL_GET_ARTICLES_BASED_ON_SEARCH_STRING = "SELECT * FROM Article WHERE Header LIKE '%#searchString#%' and Complete = 1;";
         private const string SQL_GET_VIDEO = "SELECT youtubeId FROM VIDEOS WHERE TITLE LIKE '%#searchString#%' and status = 'Published'";
         private const string SQL_GET_IMAGE = "SELECT * FROM IMAGES WHERE tags LIKE'%#searchTag#%' and display = 1;";
@@ -571,7 +571,8 @@ namespace LatestSightingsLibrary
                     {
                         {"id", data["id"].ToString()},
                         {"title", data["title"].ToString()},
-                        {"time", Convert.ToDateTime(data["time"]).ToString(format)}
+                        {"time", Convert.ToDateTime(data["time"]).ToString(format)},
+                        {"name", data["name"].ToString()}
                     };
                     tings.Add(ting);
                 }
