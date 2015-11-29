@@ -21,7 +21,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_VIDEO_FEATURED = "SELECT b.Id, b.Title, b.youtubeId, a.Sorting, c.Description, c.imageDefault As Url , c.imageHigh as Url2 , c.imageMedium as Url3 FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.videos b ON b.Id = a.Id INNER JOIN latestsightings.dbo.youTubeVideo c ON c.Id = b.YouTubeId WHERE (a.Type = 'video') ORDER BY a.Sorting;";
         private const string SQL_GET_VIDEO_FEATURED_COUNT = "SELECT COUNT(Id) FROM latestsightings.dbo.featuredItems WHERE (type = 'video');";
         private const string SQL_GET_VIDEO_FEATURED_ID = "SELECT COUNT(Id) FROM latestsightings.dbo.featuredItems WHERE (type = 'video' AND id = @id);";
-        private const string SQL_GET_CATEGORY_FEATURED = "SELECT b.Id, b.Name As Title, a.Sorting, '' As Description, '' As Url FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Category b ON b.Id = a.Id WHERE (a.Type = 'category') ORDER BY a.Sorting;";
+        private const string SQL_GET_CATEGORY_FEATURED = "SELECT b.Id, b.Name As Title, b.urlName As CategoryUrl, a.Sorting, '' As Description, '' As Url FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Category b ON b.Id = a.Id WHERE (a.Type = 'category') ORDER BY a.Sorting;";
         private const string SQL_GET_ARTICLE_FEATURED = "SELECT b.Id, b.Header As Title, b.CategoryID , a.Sorting, '' As Description, b.picture As Url, b.body as ArticleBody FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Article b ON b.Id = a.Id WHERE (a.Type = 'article') ORDER BY a.Sorting;";
         private const string SQL_INSERT_FEATURED_VIDEO_REPLACE = "DELETE FROM latestsightings.dbo.featuredItems WHERE (type = 'video' AND sorting = @sorting); INSERT INTO latestsightings.dbo.featuredItems (type, id, sorting) VALUES ('video', @id, @sorting);";
         private const string SQL_INSERT_FEATURED_VIDEO_ITEM = "INSERT INTO latestsightings.dbo.featuredItems (type, id, sorting) VALUES ('video', {0}, {1});";
@@ -508,6 +508,7 @@ namespace LatestSightingsLibrary
                         item.Description = rdr["description"].ToString();
                         item.Title = rdr["title"].ToString();
                         item.Url = rdr["url"].ToString();
+                        item.Url2 = rdr["CategoryUrl"].ToString();
                         item.Order = Convert.ToInt32(rdr["Sorting"]);
                         items.Add(item);
                     }

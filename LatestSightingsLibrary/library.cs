@@ -25,6 +25,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
         private const string SQL_GET_PARKS = "SELECT id, name FROM parks WHERE (active = 1)";
         private const string SQL_GET_KRUGER_TINGS = "SELECT top 25 * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
+        private const string SQL_GET_CATEGORY_ID = "SELECT id  FROM Category WHERE (urlName = '#urlname#')";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
         {
@@ -138,7 +139,8 @@ namespace LatestSightingsLibrary
                         {"id", data["id"].ToString()},
                         {"picture",  data["Picture"].ToString()},
                         {"categoryId",  data["CategoryID"].ToString()},
-                        {"url",  data["url"].ToString()}
+                        {"url",  data["url"].ToString()},
+                        {"urlName", data["urlName"].ToString()}
                     };
                     articles.Add(article);
                 }
@@ -306,14 +308,18 @@ namespace LatestSightingsLibrary
         }
 
 
-        public static Dictionary<string, string> GetArticle(string url)
+        public static Dictionary<string, string> GetArticle(string url, bool urlName = false)
         {
             SqlConnection conn = library.Conn();
             conn.Open();
             SqlCommand query = new SqlCommand();
             query.Connection = conn;
 
-            query.CommandText = "Select TOP 1 * from [dbo].[Article] where url = " + url;
+            if (urlName == false)
+                query.CommandText = "Select TOP 1 * from [dbo].[Article] where url = " + url;
+            else
+                query.CommandText = "Select TOP 1 * from [dbo].[Article] where urlName = " + url;
+
             SqlDataReader data = query.ExecuteReader();
             Dictionary<string, string> article = new Dictionary<string, string>();
             string format = "MMM d yyyy"; // <!-- output example Feb 27 11:41 2009
@@ -448,6 +454,29 @@ namespace LatestSightingsLibrary
             return username;
         }
 
+        public static string GetCategoryUrlId(string url)
+        {
+            SqlConnection conn = library.Conn();
+            SqlCommand query = new SqlCommand();
+            String categoryId = "";
+            query.Connection = conn;
+            // private const string SQL_GET_CATEGORY_ID = "SELECT id  FROM Category WHERE (urlName = '#urlname#')";
+            query.CommandText = SQL_GET_CATEGORY_ID.Replace("#urlname#", url);
+            conn.Open();
+
+            SqlDataReader data = query.ExecuteReader();
+            if (data.HasRows)
+            {
+                while (data.Read())
+                {
+                    categoryId = data["id"].ToString();
+                }
+            }
+            conn.Close();
+            data.Close();
+            return categoryId;
+        }
+
         public static List<Dictionary<string, string>> GetLodgeTings(string lodgeId)
         {
             SqlConnection conn = library.Conn();
@@ -572,7 +601,8 @@ namespace LatestSightingsLibrary
                         {"id", data["id"].ToString()},
                         {"title", data["title"].ToString()},
                         {"time", Convert.ToDateTime(data["time"]).ToString(format)},
-                        {"name", data["name"].ToString()}
+                        {"name", data["name"].ToString()},
+                        {"labelStatus", SetLabelStatus(Convert.ToDateTime(data["time"]))}
                     };
                     tings.Add(ting);
                 }
@@ -581,6 +611,16 @@ namespace LatestSightingsLibrary
             conn.Close();
             data.Close();
             return tings;
+        }
+
+        private static string SetLabelStatus(DateTime tingDateTime)
+        {
+            DateTime nowDate = DateTime.Now;
+            if (tingDateTime.Day == nowDate.Day)
+                return "Today ";
+            else
+                return "Yesterday " ;
+
         }
 
         public static List<Dictionary<string,string>> SearchAllArticle(string title)
