@@ -203,6 +203,7 @@ namespace LatestSightingsLibrary
                             {"picture", data["Picture"].ToString()},
                             {"id", data["id"].ToString()},
                             {"categoryid", data["categoryid"].ToString()},
+                            {"urlName", data["urlName"].ToString()}
                         };
                         articles.Add(article);
                     }

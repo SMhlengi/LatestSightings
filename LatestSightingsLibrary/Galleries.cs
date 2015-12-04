@@ -22,7 +22,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_VIDEO_FEATURED_COUNT = "SELECT COUNT(Id) FROM latestsightings.dbo.featuredItems WHERE (type = 'video');";
         private const string SQL_GET_VIDEO_FEATURED_ID = "SELECT COUNT(Id) FROM latestsightings.dbo.featuredItems WHERE (type = 'video' AND id = @id);";
         private const string SQL_GET_CATEGORY_FEATURED = "SELECT b.Id, b.Name As Title, b.urlName As CategoryUrl, a.Sorting, '' As Description, '' As Url FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Category b ON b.Id = a.Id WHERE (a.Type = 'category') ORDER BY a.Sorting;";
-        private const string SQL_GET_ARTICLE_FEATURED = "SELECT b.Id, b.Header As Title, b.CategoryID , a.Sorting, '' As Description, b.picture As Url, b.body as ArticleBody FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Article b ON b.Id = a.Id WHERE (a.Type = 'article') ORDER BY a.Sorting;";
+        private const string SQL_GET_ARTICLE_FEATURED = "SELECT b.Id, b.Header As Title, b.CategoryID , a.Sorting, '' As Description, b.picture As Url, b.body as ArticleBody, b.urlName as urlName FROM latestsightings.dbo.featuredItems a INNER JOIN latestsightings.dbo.Article b ON b.Id = a.Id WHERE (a.Type = 'article') ORDER BY a.Sorting;";
         private const string SQL_INSERT_FEATURED_VIDEO_REPLACE = "DELETE FROM latestsightings.dbo.featuredItems WHERE (type = 'video' AND sorting = @sorting); INSERT INTO latestsightings.dbo.featuredItems (type, id, sorting) VALUES ('video', @id, @sorting);";
         private const string SQL_INSERT_FEATURED_VIDEO_ITEM = "INSERT INTO latestsightings.dbo.featuredItems (type, id, sorting) VALUES ('video', {0}, {1});";
         private const string SQL_INSERT_FEATURED_CATEGORY_ITEM = "INSERT INTO latestsightings.dbo.featuredItems (type, id, sorting) VALUES ('category', {0}, {1});";
@@ -552,7 +552,8 @@ namespace LatestSightingsLibrary
                         item.Url = rdr["url"].ToString();
                         item.Order = Convert.ToInt32(rdr["Sorting"]);
                         item.ArticleBody = rdr["ArticleBody"].ToString();
-                        item.CateogryId = rdr["CategoryID"].ToString(); ;
+                        item.CateogryId = rdr["CategoryID"].ToString();
+                        item.Url2 = rdr["urlName"].ToString();
                         items.Add(item);
                     }
                 }
