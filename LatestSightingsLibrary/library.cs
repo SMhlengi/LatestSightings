@@ -841,6 +841,7 @@ namespace LatestSightingsLibrary
                     tingers.Add("longitude", data["longitude"].ToString());
                     tingers.Add("latitude", data["latitude"].ToString());
                     tingers.Add("animalid", data["animal"].ToString());
+                    tingers.Add("parkid", data["parkId"].ToString());
                     tings.Add(tingers);
                 }
             }
