@@ -432,7 +432,7 @@ namespace LatestSightingsLibrary
             return tings;                
         }
 
-        private static string GetTingerUserName(string userid)
+        public static string GetTingerUserName(string userid)
         {
             SqlConnection conn = library.Conn();
             SqlCommand query = new SqlCommand();
