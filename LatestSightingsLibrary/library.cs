@@ -25,6 +25,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
         private const string SQL_GET_PARKS = "SELECT id, name FROM parks WHERE (active = 1)";
         private const string SQL_GET_KRUGER_TINGS = "SELECT top 25 * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
+        private const string SQL_GET_PARK_TINGS = "SELECT top (@recordnumber) * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
         private const string SQL_GET_CATEGORY_ID = "SELECT id  FROM Category WHERE (urlName = '#urlname#')";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
@@ -771,6 +772,52 @@ namespace LatestSightingsLibrary
             SqlCommand query = new SqlCommand();
             query.Connection = conn;
             query.CommandText = SQL_GET_KRUGER_TINGS;
+            query.Parameters.Add("@pid", System.Data.SqlDbType.VarChar).Value = parkid.ToString();
+            conn.Open();
+            SqlDataReader data = query.ExecuteReader();
+
+            List<Dictionary<string, string>> tings = new List<Dictionary<string, string>>();
+            Dictionary<string, string> tingers;
+
+            if (data.HasRows)
+            {
+                while (data.Read())
+                {
+                    tingers = new Dictionary<string, string>();
+                    tingers.Add("id", data["id"].ToString());
+                    tingers.Add("userid", data["userId"].ToString());
+                    tingers.Add("time", ConvertToDateTimeFormat(data["time"].ToString()));
+                    tingers.Add("title", data["title"].ToString());
+                    tingers.Add("visibility", data["visibility"].ToString());
+                    tingers.Add("traffic", data["traffic"].ToString());
+                    tingers.Add("location", data["situation"].ToString());
+                    tingers.Add("description", data["description"].ToString());
+                    tingers.Add("longitude", data["longitude"].ToString());
+                    tingers.Add("latitude", data["latitude"].ToString());
+                    tingers.Add("animalid", data["animal"].ToString());
+                    tings.Add(tingers);
+                }
+            }
+
+            conn.Close();
+            data.Close();
+            if (tings.Count > 0)
+            {
+                foreach (var ting in tings)
+                {
+                    ting.Add("username", GetTingerUserName(ting["userid"]));
+                }
+            }
+            return tings;
+        }
+
+        public static List<Dictionary<string, string>> GetParkTings(Guid parkid, int count = 2 )
+        {
+            SqlConnection conn = library.Conn();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+            query.CommandText = SQL_GET_PARK_TINGS;
+            query.Parameters.Add("@recordnumber", System.Data.SqlDbType.Int).Value = count;
             query.Parameters.Add("@pid", System.Data.SqlDbType.VarChar).Value = parkid.ToString();
             conn.Open();
             SqlDataReader data = query.ExecuteReader();
