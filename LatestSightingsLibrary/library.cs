@@ -25,6 +25,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
         private const string SQL_GET_PARKS = "SELECT id, name FROM parks WHERE (active = 1)";
         private const string SQL_GET_KRUGER_TINGS = "SELECT top 25 * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
+        private const string SQL_GET_CURRENT_TO_24_HOURS_AGO_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND CAST(time AS date) >= @TwentyFourHourDate ORDER BY time DESC";
         private const string SQL_GET_PARK_TINGS = "SELECT top (@recordnumber) * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
         private const string SQL_GET_CATEGORY_ID = "SELECT id  FROM Category WHERE (urlName = '#urlname#')";
 
@@ -358,7 +359,7 @@ namespace LatestSightingsLibrary
             SqlCommand query = new SqlCommand();
             query.Connection = conn;
 
-            query.CommandText = "Select TOP 1 * from [dbo].[lodges] where name = '" + name + "' and active = 1";
+            query.CommandText = "Select TOP 1 * from [dbo].[lodges] where name like '%" + name + "%' and active = 1";
             SqlDataReader data = query.ExecuteReader();
             Dictionary<string, string> lodge = new Dictionary<string, string>();
             string format = "MMM d yyyy"; // <!-- output example Feb 27 11:41 2009
@@ -795,6 +796,58 @@ namespace LatestSightingsLibrary
                     tingers.Add("longitude", data["longitude"].ToString());
                     tingers.Add("latitude", data["latitude"].ToString());
                     tingers.Add("animalid", data["animal"].ToString());
+                    tings.Add(tingers);
+                }
+            }
+
+            conn.Close();
+            data.Close();
+            if (tings.Count > 0)
+            {
+                foreach (var ting in tings)
+                {
+                    ting.Add("username", GetTingerUserName(ting["userid"]));
+                }
+            }
+            return tings;
+        }
+        public static List<Dictionary<string, string>> GetLatest24HoursParkTings(Guid parkid)
+        {
+            //SQL_GET_CURRENT_TO_24_HOURS_AGO_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND CAST(time AS date) >= @TwentyFourHourDate ORDER BY time DESC";
+            DateTime todaysDate = DateTime.Now;
+            todaysDate = todaysDate.AddDays(-1);
+            string stringDate = "";
+            stringDate = String.Format("{0}", Convert.ToString(todaysDate.Year) + "-" + Convert.ToString(todaysDate.Month) + "-" + Convert.ToString(todaysDate.Day));
+
+            SqlConnection conn = library.Conn();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+            query.CommandText = SQL_GET_CURRENT_TO_24_HOURS_AGO_TINGS;
+            query.Parameters.Add("@pid", System.Data.SqlDbType.VarChar).Value = parkid.ToString();
+            query.Parameters.Add("@TwentyFourHourDate", System.Data.SqlDbType.VarChar).Value = stringDate;
+            conn.Open();
+            SqlDataReader data = query.ExecuteReader();
+
+            List<Dictionary<string, string>> tings = new List<Dictionary<string, string>>();
+            Dictionary<string, string> tingers;
+
+            if (data.HasRows)
+            {
+                while (data.Read())
+                {
+                    tingers = new Dictionary<string, string>();
+                    tingers.Add("id", data["id"].ToString());
+                    tingers.Add("userid", data["userId"].ToString());
+                    tingers.Add("time", ConvertToDateTimeFormat(data["time"].ToString()));
+                    tingers.Add("title", data["title"].ToString());
+                    tingers.Add("visibility", data["visibility"].ToString());
+                    tingers.Add("traffic", data["traffic"].ToString());
+                    tingers.Add("location", data["situation"].ToString());
+                    tingers.Add("description", data["description"].ToString());
+                    tingers.Add("longitude", data["longitude"].ToString());
+                    tingers.Add("latitude", data["latitude"].ToString());
+                    tingers.Add("animalid", data["animal"].ToString());
+                    tingers.Add("lodgeId", data["lodgeId"].ToString());
                     tings.Add(tingers);
                 }
             }
