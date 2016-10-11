@@ -28,6 +28,7 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_CURRENT_TO_24_HOURS_AGO_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND CAST(time AS date) >= @TwentyFourHourDate ORDER BY time DESC";
         private const string SQL_GET_PARK_TINGS = "SELECT top (@recordnumber) * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
         private const string SQL_GET_CATEGORY_ID = "SELECT id  FROM Category WHERE (urlName = '#urlname#')";
+        private const string SQL_GET_LATEST_CURRENT_TO_24_HOURS_AGO_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND time > @MostRecentTing ORDER BY time DESC";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
         {
@@ -813,7 +814,6 @@ namespace LatestSightingsLibrary
         }
         public static List<Dictionary<string, string>> GetLatest24HoursParkTings(Guid parkid)
         {
-            //SQL_GET_CURRENT_TO_24_HOURS_AGO_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND CAST(time AS date) >= @TwentyFourHourDate ORDER BY time DESC";
             DateTime todaysDate = DateTime.Now;
             todaysDate = todaysDate.AddDays(-1);
             string stringDate = "";
@@ -848,6 +848,57 @@ namespace LatestSightingsLibrary
                     tingers.Add("latitude", data["latitude"].ToString());
                     tingers.Add("animalid", data["animal"].ToString());
                     tingers.Add("lodgeId", data["lodgeId"].ToString());
+                    tingers.Add("unformatedTime", data["time"].ToString());
+                    tings.Add(tingers);
+                }
+            }
+
+            conn.Close();
+            data.Close();
+            if (tings.Count > 0)
+            {
+                foreach (var ting in tings)
+                {
+                    ting.Add("username", GetTingerUserName(ting["userid"]));
+                }
+            }
+            return tings;
+        }
+
+        public static List<Dictionary<string, string>> GetLatest24HoursParkTings(Guid parkid, DateTime time)
+        {
+            //private SQL_GET_LATEST_CURRENT_TO_24_HOURS_AGO_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND time > @MostRecentTing ORDER BY time DESC";
+
+            SqlConnection conn = library.Conn();
+            SqlCommand query = new SqlCommand();
+            query.Connection = conn;
+            query.CommandText = SQL_GET_LATEST_CURRENT_TO_24_HOURS_AGO_TINGS;
+            query.Parameters.Add("@pid", System.Data.SqlDbType.VarChar).Value = parkid.ToString();
+            query.Parameters.Add("@MostRecentTing", System.Data.SqlDbType.VarChar).Value = time;
+            conn.Open();
+            SqlDataReader data = query.ExecuteReader();
+
+            List<Dictionary<string, string>> tings = new List<Dictionary<string, string>>();
+            Dictionary<string, string> tingers;
+
+            if (data.HasRows)
+            {
+                while (data.Read())
+                {
+                    tingers = new Dictionary<string, string>();
+                    tingers.Add("id", data["id"].ToString());
+                    tingers.Add("userid", data["userId"].ToString());
+                    tingers.Add("time", ConvertToDateTimeFormat(data["time"].ToString()));
+                    tingers.Add("title", data["title"].ToString());
+                    tingers.Add("visibility", data["visibility"].ToString());
+                    tingers.Add("traffic", data["traffic"].ToString());
+                    tingers.Add("location", data["situation"].ToString());
+                    tingers.Add("description", data["description"].ToString());
+                    tingers.Add("longitude", data["longitude"].ToString());
+                    tingers.Add("latitude", data["latitude"].ToString());
+                    tingers.Add("animalid", data["animal"].ToString());
+                    tingers.Add("lodgeId", data["lodgeId"].ToString());
+                    tingers.Add("unformatedTime", data["time"].ToString());
                     tings.Add(tingers);
                 }
             }
