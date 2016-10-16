@@ -815,7 +815,7 @@ namespace LatestSightingsLibrary
         public static List<Dictionary<string, string>> GetLatest24HoursParkTings(Guid parkid)
         {
             DateTime todaysDate = DateTime.Now;
-            todaysDate = todaysDate.AddDays(-5);
+            todaysDate = todaysDate.AddDays(-1);
             string stringDate = "";
             stringDate = String.Format("{0}", Convert.ToString(todaysDate.Year) + "-" + Convert.ToString(todaysDate.Month) + "-" + Convert.ToString(todaysDate.Day));
 
