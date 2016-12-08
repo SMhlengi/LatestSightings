@@ -25,10 +25,8 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
         private const string SQL_GET_PARKS = "SELECT id, name FROM parks WHERE (active = 1)";
         private const string SQL_GET_KRUGER_TINGS = "SELECT top 25 * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
-        private const string SQL_GET_CURRENT_TO_24_HOURS_AGO_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND CAST(time AS date) >= @TwentyFourHourDate ORDER BY time DESC";
         private const string SQL_GET_PARK_TINGS = "SELECT top (@recordnumber) * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
         private const string SQL_GET_CATEGORY_ID = "SELECT id  FROM Category WHERE (urlName = '#urlname#')";
-        private const string SQL_GET_LATESTS_PARK_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND time > @MostRecentTing ORDER BY time DESC";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
         {
@@ -377,6 +375,7 @@ namespace LatestSightingsLibrary
                     lodge.Add("coordinates", data["coordinates"].ToString());
                     lodge.Add("prizes", data["prizes"].ToString());
                     lodge.Add("logo", data["logo"].ToString());
+                    lodge.Add("parkid", data["park"].ToString());
                 }
             }
             else
