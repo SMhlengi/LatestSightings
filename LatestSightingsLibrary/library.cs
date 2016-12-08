@@ -25,8 +25,10 @@ namespace LatestSightingsLibrary
         private const string SQL_GET_TING_INFO = "SELECT * FROM tings where id = @tingid";
         private const string SQL_GET_PARKS = "SELECT id, name FROM parks WHERE (active = 1)";
         private const string SQL_GET_KRUGER_TINGS = "SELECT top 25 * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
+        private const string SQL_GET_CURRENT_TO_24_HOURS_AGO_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND published = 'published' AND CAST(time AS date) >= @TwentyFourHourDate ORDER BY time DESC";
         private const string SQL_GET_PARK_TINGS = "SELECT top (@recordnumber) * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL ORDER BY time DESC";
         private const string SQL_GET_CATEGORY_ID = "SELECT id  FROM Category WHERE (urlName = '#urlname#')";
+        private const string SQL_GET_LATESTS_PARK_TINGS = "SELECT * FROM tings WHERE (parkId = @pid) AND animal IS NOT NULL AND published = 'published' AND time > @MostRecentTing ORDER BY time DESC";
 
         public static bool isArticleTableEmpty(SqlConnection conn, SqlCommand query)
         {
@@ -811,10 +813,11 @@ namespace LatestSightingsLibrary
             }
             return tings;
         }
-        public static List<Dictionary<string, string>> GetLatest24HoursParkTings(Guid parkid)
+        public static List<Dictionary<string, string>> GetLatest24HoursParkTings(Guid parkid, int days = -1)
         {
+            int iteration = 0;
             DateTime todaysDate = DateTime.Now;
-            todaysDate = todaysDate.AddDays(-1);
+            todaysDate = todaysDate.AddDays(days);
             string stringDate = "";
             stringDate = String.Format("{0}", Convert.ToString(todaysDate.Year) + "-" + Convert.ToString(todaysDate.Month) + "-" + Convert.ToString(todaysDate.Day));
 
@@ -852,15 +855,42 @@ namespace LatestSightingsLibrary
                     tings.Add(tingers);
                 }
             }
+            else
+            {
+                iteration += 1;
+                if (iteration == 1)
+                {
+                    conn.Close();
+                    data.Close();
+                    GetLatest24HoursParkTings(parkid, days -= 30);
+                }
+                else if (iteration == 2)
+                {
+                    conn.Close();
+                    data.Close();
+                    GetLatest24HoursParkTings(parkid, days -= 90);
+                }
+                else if (iteration == 3)
+                {
+                    conn.Close();
+                    data.Close();
+                    GetLatest24HoursParkTings(parkid, days -= 30);
+                }
+            }
 
             conn.Close();
             data.Close();
-            if (tings.Count > 0)
+            if (tings.Count > 9)
             {
                 foreach (var ting in tings)
                 {
                     ting.Add("username", GetTingerUserName(ting["userid"]));
                 }
+            }
+            else if (iteration < 4)
+            {
+                iteration += 1;
+                GetLatest24HoursParkTings(parkid, days -= 60);
             }
             return tings;
         }
