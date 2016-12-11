@@ -815,7 +815,6 @@ namespace LatestSightingsLibrary
         }
         public static List<Dictionary<string, string>> GetLatest24HoursParkTings(Guid parkid, int days = -1)
         {
-            int iteration = 0;
             DateTime todaysDate = DateTime.Now;
             todaysDate = todaysDate.AddDays(days);
             string stringDate = "";
@@ -855,42 +854,12 @@ namespace LatestSightingsLibrary
                     tings.Add(tingers);
                 }
             }
-            else
-            {
-                iteration += 1;
-                if (iteration == 1)
-                {
-                    conn.Close();
-                    data.Close();
-                    GetLatest24HoursParkTings(parkid, days -= 30);
-                }
-                else if (iteration == 2)
-                {
-                    conn.Close();
-                    data.Close();
-                    GetLatest24HoursParkTings(parkid, days -= 90);
-                }
-                else if (iteration == 3)
-                {
-                    conn.Close();
-                    data.Close();
-                    GetLatest24HoursParkTings(parkid, days -= 30);
-                }
-            }
 
             conn.Close();
             data.Close();
-            if (tings.Count > 9)
+            foreach (var ting in tings)
             {
-                foreach (var ting in tings)
-                {
-                    ting.Add("username", GetTingerUserName(ting["userid"]));
-                }
-            }
-            else if (iteration < 4)
-            {
-                iteration += 1;
-                GetLatest24HoursParkTings(parkid, days -= 60);
+                ting.Add("username", GetTingerUserName(ting["userid"]));
             }
             return tings;
         }
